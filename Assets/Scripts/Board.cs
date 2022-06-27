@@ -69,4 +69,9 @@ public class Board : MonoBehaviour
     {
         return point.x >= 0 && point.y >= 0 && point.x < BoardSize.x && point.y < BoardSize.y;
     }
+
+    public Piece GetPieceByPoint(Vector2Int point)
+    {
+        return pieces[point.x, point.y].GetComponent<Piece>();
+    }
 }
