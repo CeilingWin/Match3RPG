@@ -141,6 +141,7 @@ public class Piece : MonoBehaviour
             {
                 this.SetPoint(this.oldPoint);
                 this.swapPiece.SetPoint(swapPiece.oldPoint);
+                // todo: set swipe enable
             }
             isNeedToCheckMatch = false;
         }
