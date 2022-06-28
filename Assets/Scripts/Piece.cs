@@ -57,9 +57,12 @@ public class Piece : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (state == PieceState.Destroyed) return;
         if (state == PieceState.Idle && isMatched)
         {
+            print("destroy" + point.ToString());
             StartCoroutine(Destroy());
+            state = PieceState.Destroyed;
             return;
         }
         var desPos = new Vector3(point.x, point.y, transform.localPosition.z);
