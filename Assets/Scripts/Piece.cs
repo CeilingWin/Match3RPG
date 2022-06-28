@@ -6,6 +6,12 @@ using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum PieceState
+{
+    Idle,
+    Moving,
+    Destroyed
+}
 public class Piece : MonoBehaviour
 {
     public Vector2Int point;
@@ -18,6 +24,14 @@ public class Piece : MonoBehaviour
 
     private Board board;
     private GameObject[,] pieces;
+
+    public PieceState state;
+
+    private bool isMatched;
+
+    private bool isNeedToCheckMatch;
+
+    private Piece swapPiece;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -32,19 +46,37 @@ public class Piece : MonoBehaviour
         point.x = (int) localPosition.x;
         point.y = (int) localPosition.y;
         oldPoint = point;
+        state = PieceState.Idle;
+        isMatched = false;
+        isNeedToCheckMatch = false;
+        this.gameObject.name = point.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (state == PieceState.Idle)
+        {
+            if (isMatched) Destroy();
+            return;
+        }
+        var desPos = new Vector3(point.x, point.y, transform.localPosition.z);
+        if (Vector3.Distance(desPos, transform.localPosition) < 0.01f)
+        {
+            transform.localPosition = desPos;
+            this.OnMoveDone();
+        }
+        else
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, desPos, 0.03f);
+            state = PieceState.Moving;
+        }
     }
 
     public void SetColor(int colorId)
     {
         this.colorId = colorId;
         var path = "Textures/Pieces/" + colorId;
-        print(path);
         Sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(path);
     }
 
@@ -87,24 +119,37 @@ public class Piece : MonoBehaviour
         {
             var swapPiece = board.GetPieceByPoint(point);
             swapPiece.SetPoint(this.point);
-            this.SetPoint(point);
-            if (!this.CheckMatch3() && !swapPiece.CheckMatch3())
-            {
-                this.SetPoint(this.oldPoint);
-                swapPiece.SetPoint(swapPiece.oldPoint);
-            }
+            this.swapPiece = swapPiece;
+            this.SetPoint(point, true);
         }
     }
 
-    public void SetPoint(Vector2Int point)
+    void OnMoveDone()
+    {
+        state = PieceState.Idle;
+        if (isNeedToCheckMatch)
+        {
+            board.CheckMatch3();
+            if (!this.IsMatched())
+            {
+                this.SetPoint(this.oldPoint);
+                this.swapPiece.SetPoint(swapPiece.oldPoint);
+            }
+            isNeedToCheckMatch = false;
+        }
+    }
+
+    private void SetPoint(Vector2Int point, bool needToCheckMatch = false)
     {
         this.oldPoint = this.point;
         this.point = point;
-        transform.localPosition = new Vector3(point.x, point.y, transform.localPosition.z);
         pieces[point.x, point.y] = transform.gameObject;
+        state = PieceState.Moving;
+        this.isNeedToCheckMatch = needToCheckMatch;
+        this.gameObject.name = point.ToString();
     }
 
-    public bool CheckMatch3()
+    public bool IsMatched3()
     {
         var direction = this.point - this.oldPoint;
         List<Vector2Int> directions = new List<Vector2Int>()
@@ -173,6 +218,17 @@ public class Piece : MonoBehaviour
 
     public void Match()
     {
+        this.isMatched = true;
+    }
+
+    public void Destroy()
+    {
         Sprite.GetComponent<SpriteRenderer>().color = Color.black;
+        state = PieceState.Destroyed;
+    }
+
+    public bool IsMatched()
+    {
+        return isMatched;
     }
 }

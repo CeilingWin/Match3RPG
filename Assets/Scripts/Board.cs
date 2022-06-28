@@ -24,7 +24,6 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < BoardSize.y; y++)
             {
-                print(x + " " + y);
                 var bg = Instantiate(BackGroundPiece, transform, true);
                 bg.transform.localPosition = GetPiecePositionByIndex(new Vector2Int(x, y));
             }
@@ -43,7 +42,7 @@ public class Board : MonoBehaviour
                 var pos = GetPiecePositionByIndex(new Vector2Int(x, y));
                 pos.z = PIECE_Z_ODER;
                 piece.transform.localPosition = pos;
-                piece.GetComponent<Piece>().SetColor(Random.Range(1,7));
+                piece.GetComponent<Piece>().SetColor(Random.Range(1,5));
                 pieces[x,y] = piece;
             }
         }
@@ -73,5 +72,47 @@ public class Board : MonoBehaviour
     public Piece GetPieceByPoint(Vector2Int point)
     {
         return pieces[point.x, point.y].GetComponent<Piece>();
+    }
+
+    public bool CheckMatch3()
+    {
+        var isMatched = false;
+        for (int x = 0; x < BoardSize.x; x++)
+        {
+            for (int y = 0; y < BoardSize.y; y++)
+            {
+                var piece = pieces[x, y].GetComponent<Piece>();
+                var matched = false;
+                var directions = new List<Vector2Int>() {Vector2Int.right, Vector2Int.up};
+                foreach (var direction in directions)
+                {
+                    var numPieceMatched = 1;
+                    var currentPoint = piece.point + direction;
+                    var listPieceMatched = new List<Piece>();
+                    while (this.IsPointInBoard(currentPoint) && piece.IsSamePiece(this.GetPieceByPoint(currentPoint)))
+                    {
+                        numPieceMatched += 1;
+                        listPieceMatched.Add(this.GetPieceByPoint(currentPoint));
+                        currentPoint += direction;
+                    }
+                    if (numPieceMatched >= 3)
+                    {
+                        matched = true;
+                        foreach (var p in listPieceMatched)
+                        {
+                            p.Match();
+                        }
+                    }
+                }
+
+                if (matched)
+                {
+                    isMatched = true;
+                    piece.Match();
+                }
+                
+            }
+        }
+        return isMatched;
     }
 }
