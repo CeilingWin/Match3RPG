@@ -13,6 +13,8 @@ public class Board : MonoBehaviour
     private GameObject[,] pieces;
 
     public Vector3 sizePiece;
+
+    private bool canSwipe;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +30,9 @@ public class Board : MonoBehaviour
                 bg.transform.localPosition = GetPiecePositionByIndex(new Vector2Int(x, y));
             }
         }
+
         InitPieces();
+        SetSwipeEnabled(true);
     }
 
     void InitPieces()
@@ -74,6 +78,12 @@ public class Board : MonoBehaviour
         return pieces[point.x, point.y].GetComponent<Piece>();
     }
 
+    public void RemovePiece(Vector2Int point)
+    {
+        print("remove " + point.ToString());
+        pieces[point.x, point.y] = null;
+    }
+
     public bool CheckMatch3()
     {
         var isMatched = false;
@@ -114,5 +124,25 @@ public class Board : MonoBehaviour
             }
         }
         return isMatched;
+    }
+
+    public void SetSwipeEnabled(bool b)
+    {
+        this.canSwipe = b;
+    }
+
+    public bool CanSwipe()
+    {
+        return this.canSwipe;
+    }
+
+    public void GenPieces()
+    {
+        print("gen pieces");
+        SetSwipeEnabled(true);
+        for (var x = 0; x < BoardSize.x; x++)
+        {
+            
+        }
     }
 }

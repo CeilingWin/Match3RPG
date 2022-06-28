@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -49,15 +50,16 @@ public class Piece : MonoBehaviour
         state = PieceState.Idle;
         isMatched = false;
         isNeedToCheckMatch = false;
+        swapPiece = null;
         this.gameObject.name = point.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (state == PieceState.Idle)
+        if (state == PieceState.Idle && isMatched)
         {
-            if (isMatched) Destroy();
+            StartCoroutine(Destroy());
             return;
         }
         var desPos = new Vector3(point.x, point.y, transform.localPosition.z);
@@ -115,8 +117,10 @@ public class Piece : MonoBehaviour
 
     void OnSwipeTo(Vector2Int point)
     {
+        if (!board.CanSwipe()) return;
         if (board.IsPointInBoard(point))
         {
+            board.SetSwipeEnabled(false);
             var swapPiece = board.GetPieceByPoint(point);
             swapPiece.SetPoint(this.point);
             this.swapPiece = swapPiece;
@@ -221,10 +225,18 @@ public class Piece : MonoBehaviour
         this.isMatched = true;
     }
 
-    public void Destroy()
+    IEnumerator Destroy()
     {
         Sprite.GetComponent<SpriteRenderer>().color = Color.black;
         state = PieceState.Destroyed;
+        yield return new WaitForSeconds(0.5f);
+        board.RemovePiece(point);
+        if (swapPiece != null)
+        {
+            board.GenPieces();
+        }
+        GameObject.Destroy(this.gameObject);
+        yield return null;
     }
 
     public bool IsMatched()
