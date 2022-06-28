@@ -27,7 +27,9 @@ public class Board : MonoBehaviour
             for (int y = 0; y < BoardSize.y; y++)
             {
                 var bg = Instantiate(BackGroundPiece, transform, true);
-                bg.transform.localPosition = GetPiecePositionByIndex(new Vector2Int(x, y));
+                var pos = GetPiecePositionByIndex(new Vector2Int(x, y));
+                pos.z = 0;
+                bg.transform.localPosition = pos;
             }
         }
 
@@ -37,16 +39,16 @@ public class Board : MonoBehaviour
 
     void InitPieces()
     {
-        const float PIECE_Z_ODER = -0.1f;
         for (int x = 0; x < BoardSize.x; x++)
         {
             for (int y = 0; y < BoardSize.y; y++)
             {
-                var piece = Instantiate(Piece, transform, true);                
-                var pos = GetPiecePositionByIndex(new Vector2Int(x, y));
-                pos.z = PIECE_Z_ODER;
+                var piece = Instantiate(Piece, transform, true);
+                var point = new Vector2Int(x, y);
+                piece.GetComponent<Piece>().SetColor(Random.Range(1,6));
+                piece.GetComponent<Piece>().SetPoint(point);
+                var pos = GetPiecePositionByIndex(point + new Vector2Int(0,BoardSize.y));
                 piece.transform.localPosition = pos;
-                piece.GetComponent<Piece>().SetColor(Random.Range(1,5));
                 pieces[x,y] = piece;
             }
         }
@@ -60,7 +62,8 @@ public class Board : MonoBehaviour
 
     public Vector3 GetPiecePositionByIndex(Vector2Int index)
     {
-        return new Vector3(index.x * sizePiece.x, index.y * sizePiece.y, 0);
+        const float PIECE_Z_ODER = -0.1f;
+        return new Vector3(index.x * sizePiece.x, index.y * sizePiece.y, PIECE_Z_ODER);
     }
 
     public GameObject[,] GetPieces()
@@ -131,6 +134,22 @@ public class Board : MonoBehaviour
         this.canSwipe = b;
     }
 
+    public void UpdateSwipeEnable()
+    {
+        for (var x = 0; x < BoardSize.x; x++)
+        {
+            for (var y = 0; y < BoardSize.y; y++)
+            {
+                if (pieces[x,y] != null && pieces[x, y].GetComponent<Piece>().state == PieceState.Moving)
+                {
+                    SetSwipeEnabled(false);
+                    return;
+                }
+            }
+        }
+        SetSwipeEnabled(true);
+    }
+
     public bool CanSwipe()
     {
         return this.canSwipe;
@@ -142,7 +161,34 @@ public class Board : MonoBehaviour
         SetSwipeEnabled(true);
         for (var x = 0; x < BoardSize.x; x++)
         {
-            
+            var numDestroyedPieces = 0;
+            var y = 0;
+            while (y<BoardSize.y)
+            {
+                var pieceObject = pieces[x, y];
+                if (pieceObject == null)
+                {
+                    numDestroyedPieces += 1;
+                }
+                else
+                {
+                    var piece = pieceObject.GetComponent<Piece>();
+                    piece.SetPoint(new Vector2Int(piece.point.x, piece.point.y - numDestroyedPieces));
+                }
+                y += 1;
+            }
+
+            for (var i = 0; i < numDestroyedPieces; i++)
+            {
+                var newPiece = Instantiate(Piece, transform, true);
+                newPiece.transform.localPosition = GetPiecePositionByIndex(new Vector2Int(x, BoardSize.y + i));
+                var newPieceController = newPiece.GetComponent<Piece>();
+                newPieceController.SetColor(Random.Range(1,7));
+                newPieceController.SetPoint(new Vector2Int(x,y - numDestroyedPieces + i));
+                print("crp" + newPiece.gameObject.name + "_" + newPieceController.transform.localPosition.ToString() + "->" + newPieceController.point.ToString());
+                pieces[x,y - numDestroyedPieces + i] = newPiece;
+            }
         }
+        // todo: check match after gen
     }
 }

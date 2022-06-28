@@ -37,35 +37,40 @@ public class Piece : MonoBehaviour
     private void Awake()
     {
         Sprite = transform.Find("Sprite").gameObject;
-    }
-
-    void Start()
-    {
         board = FindObjectOfType<Board>();
         pieces = board.GetPieces();
-        var localPosition = transform.localPosition;
-        point.x = (int) localPosition.x;
-        point.y = (int) localPosition.y;
-        oldPoint = point;
         state = PieceState.Idle;
         isMatched = false;
         isNeedToCheckMatch = false;
         swapPiece = null;
-        this.gameObject.name = point.ToString();
+    }
+
+    void Start()
+    {
+        var localPosition = transform.localPosition;
+        oldPoint.x = (int) localPosition.x;
+        oldPoint.y = (int) localPosition.y;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (state == PieceState.Destroyed) return;
-        if (state == PieceState.Idle && isMatched)
+        if (state == PieceState.Idle)
         {
-            print("destroy" + point.ToString());
-            StartCoroutine(Destroy());
-            state = PieceState.Destroyed;
+            if (isMatched)
+            {
+                print("destroy" + point.ToString());
+                StartCoroutine(Destroy());
+                state = PieceState.Destroyed;
+            }
             return;
         }
         var desPos = new Vector3(point.x, point.y, transform.localPosition.z);
+        print(gameObject.name 
+              + "cpr " + transform.localPosition.ToString()
+              + "point" + point.ToString()
+              + Vector3.Distance(desPos, transform.localPosition));
         if (Vector3.Distance(desPos, transform.localPosition) < 0.01f)
         {
             transform.localPosition = desPos;
@@ -73,7 +78,7 @@ public class Piece : MonoBehaviour
         }
         else
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, desPos, 0.03f);
+            transform.localPosition = Vector3.Lerp(transform.localPosition, desPos, 0.1f);
             state = PieceState.Moving;
         }
     }
@@ -141,17 +146,17 @@ public class Piece : MonoBehaviour
             {
                 this.SetPoint(this.oldPoint);
                 this.swapPiece.SetPoint(swapPiece.oldPoint);
-                // todo: set swipe enable
             }
             isNeedToCheckMatch = false;
         }
+        board.UpdateSwipeEnable();
     }
 
-    private void SetPoint(Vector2Int point, bool needToCheckMatch = false)
+    public void SetPoint(Vector2Int point, bool needToCheckMatch = false)
     {
         this.oldPoint = this.point;
         this.point = point;
-        pieces[point.x, point.y] = transform.gameObject;
+        if (board.IsPointInBoard(point)) pieces[point.x, point.y] = transform.gameObject;
         state = PieceState.Moving;
         this.isNeedToCheckMatch = needToCheckMatch;
         this.gameObject.name = point.ToString();

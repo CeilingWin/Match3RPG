@@ -43,9 +43,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 139643297832421887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1ee06bb31a5b424d9e04caaf72ab1b8, type: 3}
+  m_Script: {fileID: 11500000, guid: a26e07d3746e00e46bcd2c73e2c87409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  point: {x: 0, y: 0}
+  oldPoint: {x: 0, y: 0}
+  state: 0
 --- !u!65 &2113494094909098045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -132,7 +135,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5c227d65c7e8cc7478d16e3766e4d99f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2b8d69f598a15af46b0aca46fd341dc1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
