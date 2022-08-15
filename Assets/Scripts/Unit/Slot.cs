@@ -29,7 +29,7 @@ namespace Unit
 
         public void SetItem(IItem item)
         {
-            this.item = this.item;
+            this.item = item;
         }
     }
 }

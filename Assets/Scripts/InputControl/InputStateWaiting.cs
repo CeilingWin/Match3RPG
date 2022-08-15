@@ -18,8 +18,8 @@ namespace InputControl
                         {
                             return new InputStatePlayGame(target.transform.position);
                         }
-                        return new InputStateMoveCamera();
                     }
+                    return new InputStateMoveCamera();
                 }
             } else if (Input.touches.Length == 2)
             {
