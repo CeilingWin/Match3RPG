@@ -4,6 +4,11 @@ namespace InputControl
 {
     public class InputStateWaiting : IInputState
     {
+        public void OnEnterState()
+        {
+            
+        }
+
         public IInputState Update()
         {
             if (Input.touches.Length == 1)
@@ -16,14 +21,14 @@ namespace InputControl
                     {
                         if (target.transform.CompareTag("Item"))
                         {
-                            return new InputStatePlayGame(target.transform.position);
+                            return InputHandler.statePlayGame;
                         }
                     }
-                    return new InputStateMoveCamera();
+                    return InputHandler.stateMoveCamera;
                 }
             } else if (Input.touches.Length == 2)
             {
-                return new InputStateZoom();
+                return InputHandler.stateZoom;
             }
             return null;
         }

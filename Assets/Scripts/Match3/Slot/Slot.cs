@@ -22,6 +22,11 @@ namespace Unit
             return state;
         }
 
+        public bool CanSetItem()
+        {
+            return GetState().CanContainItem() && item == null;
+        }
+
         public IItem GetItem()
         {
             return item;
