@@ -1,9 +1,11 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using InputControl;
 using Match3;
 using Rpg;
 using Unit;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
@@ -11,6 +13,8 @@ public class Game : MonoBehaviour
     [SerializeField] private GameObject ItemPrefab;
 
     public float ItemSize;
+    [FormerlySerializedAs("inputHandler")] [SerializeField]
+    private InputHandler InputHandler;
 
     private ISlot[,] slots;
 

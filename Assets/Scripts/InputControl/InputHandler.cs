@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace InputControl
 {
@@ -30,6 +31,8 @@ namespace InputControl
                 state = newState;
                 state.OnEnterState();
             }
+            
+            // todo: continue invoke event play game
         }
     }
 }

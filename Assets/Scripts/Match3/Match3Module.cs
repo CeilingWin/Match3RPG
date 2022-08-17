@@ -27,7 +27,6 @@ namespace Match3
 
         public async UniTask Init(CancellationToken cancellationToken)
         {
-            Debug.Log("init m3");
             await fillStrategy.Fill(gameBoard, cancellationToken);
         }
         public Vector3 IndexToWorldPosition(int row, int column)
@@ -37,12 +36,6 @@ namespace Match3
             return new Vector3(x, 0, z);
         }
 
-        private Item CreateNewItem(int row, int column)
-        {
-            var item = Object.Instantiate(itemPrefab);
-            item.transform.position = IndexToWorldPosition(row, column);
-            return item.GetComponent<Item>();
-        }
-
+        
     }
 }
