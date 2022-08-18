@@ -5,12 +5,25 @@ namespace Match3.Solver
 {
     public class SolveData
     {
-        private List<ISlot> SolvedSlot { get; }
+        private HashSet<ISlot> SolvedSlot { get; }
 
         public SolveData()
         {
             // todo:
-            SolvedSlot = new List<ISlot>();
+            SolvedSlot = new HashSet<ISlot>();
+        }
+
+        public void AddSlot(ISlot slot)
+        {
+            SolvedSlot.Add(slot);
+        }
+
+        public void AddSlot(IEnumerable<ISlot> slots)
+        {
+            foreach (var slot in slots)
+            {
+                AddSlot(slot);
+            }
         }
     }
 }

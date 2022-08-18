@@ -7,6 +7,8 @@ namespace core
     {
         public void SetContentId(int id);
 
+        public int GetContentId();
+
         public void SetPosition(Vector3 pos);
         public UniTask Appear(float delayTime = 0);
 

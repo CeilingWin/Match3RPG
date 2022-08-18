@@ -1,5 +1,7 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DefaultNamespace;
 using InputControl;
 using Match3;
 using Rpg;
@@ -16,43 +18,82 @@ public class Game : MonoBehaviour
     [FormerlySerializedAs("inputHandler")] [SerializeField]
     private InputHandler InputHandler;
 
-    private ISlot[,] slots;
-
     private Match3Module match3Module;
     private RpgModule rpgModule;
+    private AsyncLazy currentTask;
+    private CancellationToken cancellationToken;
+    
+    // handle input
+    private Vector3 startPosition;
 
     // Start is called before the first frame update
     void Start()
     {
+        cancellationToken = this.GetCancellationTokenOnDestroy();
         match3Module = new Match3Module(0, ItemPrefab);
         rpgModule = new RpgModule();
-        Init(this.GetCancellationTokenOnDestroy());
+        Init(cancellationToken);
+        InputHandler.TouchBegan += OnTouchBegan;
+        InputHandler.TouchMoved += OnTouchMoved;
+        InputHandler.TouchEnded += OnTouchEnded;
+        InputHandler.TouchCanceled += OnTouchCancel;
     }
 
     private async UniTask Init(CancellationToken cancellationToken)
     {
         await match3Module.Init(cancellationToken);
     }
-
-    // private void FillItem()
-    // {
-    //     for (var row = 0; row < NumRow; row++)
-    //     {
-    //         for (var column = 0; column < NumColumn; column++)
-    //         {
-    //             var slot = slots[row, column];
-    //             if (slot.GetState().CanContainItem())
-    //             {
-    //                 var item = CreateNewItem(row, column);
-    //                 item.SetContentId(Random.Range(0, 4));
-    //                 slot.SetItem(item);
-    //             }
-    //         }
-    //     }
-    // }
-
+    
     // Update is called once per frame
     void Update()
     {
+    }
+    
+    // private bool 
+
+    private void OnTouchBegan(object sender, Vector3 boardPosition)
+    {
+        startPosition = boardPosition;
+    }
+    
+    private void OnTouchMoved(object sender, Vector3 boardPosition)
+    {
+        if (!CanControlGame()) return;
+        if (Vector3.Distance(boardPosition, startPosition) > GameConst.MinTouchDistance)
+        {
+            if (match3Module.IsPointOnItem(startPosition))
+            {
+                currentTask = MoveItem(startPosition, boardPosition, cancellationToken).ToAsyncLazy();
+            }
+        }
+    }
+    
+    private void OnTouchEnded(object sender, Vector3 boardPosition)
+    {
+        if (!CanControlGame()) return;
+        if (Vector3.Distance(boardPosition, startPosition) < GameConst.MinTouchDistance)
+        {
+            Debug.Log("click");
+        }
+        else
+        {
+        }
+    }
+    
+    private void OnTouchCancel(object sender, EventArgs e)
+    {
+    }
+
+    private async UniTask MoveItem(Vector3 startPosition, Vector3 endPosition, CancellationToken cancellationToken)
+    {
+        var startGridPos = match3Module.PositionToGridPosition(startPosition);
+        var dir = match3Module.GetMoveDirection(startPosition, endPosition);
+        var endGridPos = startGridPos + dir;
+        await match3Module.Swap(startGridPos, endGridPos, cancellationToken);
+    }
+
+    private bool CanControlGame()
+    {
+        return currentTask == null || currentTask.Task.Status.IsCompleted();
     }
 }

@@ -30,5 +30,16 @@ namespace Match3
                 }
             }
         }
+
+        public bool IsPointInBoard(GridPosition pos)
+        {
+            return (0 <= pos.ColumnIndex && pos.ColumnIndex < columnCount)
+                   && (0 <= pos.RowIndex && pos.RowIndex < rowCount);
+        }
+
+        public ISlot GetSlot(GridPosition pos)
+        {
+            return Slots[pos.RowIndex, pos.ColumnIndex];
+        }
     }
 }

@@ -6,8 +6,10 @@ namespace InputControl
     {
         private static float SPEED = 10f;
         private Vector2 lastPoint;
-        public InputStateMoveCamera()
+        private InputHandler inputHandler;
+        public InputStateMoveCamera(InputHandler handler)
         {
+            inputHandler = handler;
         }
 
         public void OnEnterState()

@@ -29,6 +29,11 @@ public class Item : MonoBehaviour, IItem
         GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
 
+    public int GetContentId()
+    {
+        return this.contentId;
+    }
+
     public void SetPosition(Vector3 pos)
     {
         transform.position = pos;

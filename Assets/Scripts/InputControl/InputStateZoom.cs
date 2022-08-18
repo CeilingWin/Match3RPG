@@ -11,8 +11,10 @@ namespace InputControl
         private float zoomLevel;
         private float lastDistance;
 
-        public InputStateZoom()
+        private InputHandler inputHandler;
+        public InputStateZoom(InputHandler handler)
         {
+            inputHandler = handler;
             defaultFieldOfView = Camera.main!.fieldOfView;
             zoomLevel = 1;
         }

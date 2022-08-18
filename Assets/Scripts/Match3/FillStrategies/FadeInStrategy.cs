@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Match3.Solver;
 using UnityEngine;
 
 namespace Match3.FillStrategies
@@ -32,7 +33,7 @@ namespace Match3.FillStrategies
             await UniTask.WhenAll(jobs);
         }
 
-        public UniTask Solve(Math3Board gameBoard, CancellationToken cancellationToken)
+        public UniTask Solve(Math3Board gameBoard, SolveData solveData, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
