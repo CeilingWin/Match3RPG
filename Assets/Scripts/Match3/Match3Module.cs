@@ -90,10 +90,30 @@ namespace Match3
             }
             await DoAnimateSwap(slot1, slot2, cancellationToken);
             var list = new List<GridPosition>() {startPos, endPos};
-            var solveData = solver.SolveBoard(gameBoard, list);
-            await fillStrategy.Solve(gameBoard, solveData, cancellationToken);
+            await SolveBoard(list, cancellationToken);
         }
-        
+
+        private async UniTask SolveBoard(List<GridPosition> gridPositions, CancellationToken cancellationToken)
+        {
+            var solveData = solver.SolveBoard(gameBoard, gridPositions);
+            await fillStrategy.Solve(gameBoard, solveData, cancellationToken);
+            if (solveData.SolvedSlot.Count > 0)
+            {
+                List<GridPosition> solvedGridPos = new List<GridPosition>();
+                for (var row = 0; row < gameBoard.rowCount; row++)
+                {
+                    for (var column = 0; column < gameBoard.columnCount; column++)
+                    {
+                        if (solveData.SolvedSlot.Contains(gameBoard.Slots[row, column])) 
+                            solvedGridPos.Add(new GridPosition(row, column));
+                    }
+                }
+
+                // await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: cancellationToken);
+                await SolveBoard(solvedGridPos, cancellationToken);
+            }
+        }
+
         private async UniTask DoAnimateSwap(ISlot slot1, ISlot slot2, CancellationToken cancellationToken)
         {
             var item1 = slot1.GetItem();
@@ -101,8 +121,8 @@ namespace Match3
             var seq = DOTween.Sequence();
             var desPosItem1 = item2.GetPosition();
             var desPosItem2 = item1.GetPosition();
-            var task1 = item1.Transform.DOMove(desPosItem1, 0.6f).WithCancellation(cancellationToken);
-            var task2 = item2.Transform.DOMove(desPosItem2, 0.6f).WithCancellation(cancellationToken);
+            var task1 = item1.Transform.DOMove(desPosItem1, 0.4f).WithCancellation(cancellationToken);
+            var task2 = item2.Transform.DOMove(desPosItem2, 0.4f).WithCancellation(cancellationToken);
             slot1.SetItem(item2);
             slot2.SetItem(item1);
             await UniTask.WhenAll(task1, task2);

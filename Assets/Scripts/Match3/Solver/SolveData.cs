@@ -5,7 +5,7 @@ namespace Match3.Solver
 {
     public class SolveData
     {
-        private HashSet<ISlot> SolvedSlot { get; }
+        public HashSet<ISlot> SolvedSlot { get; }
 
         public SolveData()
         {

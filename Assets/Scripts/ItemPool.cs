@@ -29,11 +29,14 @@ public class ItemPool
 
     public IItem GetItem()
     {
-        return items.Count == 0 ? Object.Instantiate(itemPrefab).GetComponent<IItem>() : items.Dequeue();
+        var item = items.Count == 0 ? Object.Instantiate(itemPrefab).GetComponent<IItem>() : items.Dequeue();
+        item.Transform.gameObject.SetActive(true);
+        return item;
     }
 
     public void ReleaseItem(IItem item)
     {
+        item.Transform.gameObject.SetActive(false);
         items.Enqueue(item);
     }
 }

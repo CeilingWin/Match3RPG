@@ -49,6 +49,7 @@ namespace Match3.Solver
                 {
                     var currentSlot = gameBoard.GetSlot(currentPos);
                     if (SequenceSolver.IsMatch(slotToCheck, currentSlot)) slots.Add(currentSlot);
+                    else break;
                     currentPos += dir;
                 }
             }
