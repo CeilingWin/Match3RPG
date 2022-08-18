@@ -9,5 +9,6 @@ namespace DefaultNamespace
         public const String TagSpace = "SpaceCollider";
         public const float MinTouchDistance = 0.6f;
         public const int MinLengthSequence = 3;
+        //UNITASK_DOTWEEN_SUPPORT
     }
 }
