@@ -28,6 +28,7 @@ namespace Match3.FillStrategies
                     item.SetContentId(Random.Range(0,4));
                     item.SetPosition(controller.IndexToWorldPosition(rowIndex, columnIndex));
                     jobs.Add(item.Appear());
+                    slot.SetItem(item);
                 }
             }
             await UniTask.WhenAll(jobs);
@@ -35,7 +36,8 @@ namespace Match3.FillStrategies
 
         public UniTask Solve(Math3Board gameBoard, SolveData solveData, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
+            return UniTask.CompletedTask;
         }
     }
 }

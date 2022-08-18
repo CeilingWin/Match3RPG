@@ -32,7 +32,7 @@ public class Game : MonoBehaviour
         cancellationToken = this.GetCancellationTokenOnDestroy();
         match3Module = new Match3Module(0, ItemPrefab);
         rpgModule = new RpgModule();
-        Init(cancellationToken);
+        currentTask = Init(cancellationToken).ToAsyncLazy();
         InputHandler.TouchBegan += OnTouchBegan;
         InputHandler.TouchMoved += OnTouchMoved;
         InputHandler.TouchEnded += OnTouchEnded;
@@ -54,10 +54,13 @@ public class Game : MonoBehaviour
     private void OnTouchBegan(object sender, Vector3 boardPosition)
     {
         startPosition = boardPosition;
+        // Debug.Log("began: " + match3Module.PositionToGridPosition(startPosition));
     }
     
     private void OnTouchMoved(object sender, Vector3 boardPosition)
     {
+        
+        // Debug.Log("move: " +match3Module.PositionToGridPosition(boardPosition));
         if (!CanControlGame()) return;
         if (Vector3.Distance(boardPosition, startPosition) > GameConst.MinTouchDistance)
         {
@@ -70,6 +73,8 @@ public class Game : MonoBehaviour
     
     private void OnTouchEnded(object sender, Vector3 boardPosition)
     {
+        // Debug.Log("end: " +match3Module.PositionToGridPosition(boardPosition) + " with stp" + match3Module.PositionToGridPosition(startPosition));
+        // Debug.Log("dir" + match3Module.GetMoveDirection(startPosition, boardPosition));
         if (!CanControlGame()) return;
         if (Vector3.Distance(boardPosition, startPosition) < GameConst.MinTouchDistance)
         {
@@ -82,6 +87,7 @@ public class Game : MonoBehaviour
     
     private void OnTouchCancel(object sender, EventArgs e)
     {
+        Debug.Log("cancel: ");
     }
 
     private async UniTask MoveItem(Vector3 startPosition, Vector3 endPosition, CancellationToken cancellationToken)

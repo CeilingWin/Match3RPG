@@ -7,7 +7,7 @@ namespace DefaultNamespace
         public const int CheckTouchMark = 1<<6;
         public const String TagGameBoard = "BoardCollider";
         public const String TagSpace = "SpaceCollider";
-        public const float MinTouchDistance = 0.1f;
+        public const float MinTouchDistance = 0.6f;
         public const int MinLengthSequence = 3;
     }
 }

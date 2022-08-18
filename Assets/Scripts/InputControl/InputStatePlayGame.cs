@@ -1,7 +1,5 @@
 ﻿using System;
 using DefaultNamespace;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace InputControl

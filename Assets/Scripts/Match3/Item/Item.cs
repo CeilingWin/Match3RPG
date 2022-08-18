@@ -22,6 +22,8 @@ public class Item : MonoBehaviour, IItem
         
     }
 
+    public Transform Transform => transform;
+
     public void SetContentId(int id)
     {
         contentId = id;
@@ -37,6 +39,11 @@ public class Item : MonoBehaviour, IItem
     public void SetPosition(Vector3 pos)
     {
         transform.position = pos;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 
     public async UniTask Appear(float delayTime = 0)

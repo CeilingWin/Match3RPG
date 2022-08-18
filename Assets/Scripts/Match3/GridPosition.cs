@@ -1,4 +1,6 @@
-﻿namespace Match3
+﻿using System;
+
+namespace Match3
 {
     public class GridPosition
     {
@@ -10,8 +12,8 @@
             ColumnIndex = columnIndex;
         }
 
-        public static GridPosition Up { get; } = new GridPosition(-1, 0);
-        public static GridPosition Down { get; } = new GridPosition(1, 0);
+        public static GridPosition Up { get; } = new GridPosition(1, 0);
+        public static GridPosition Down { get; } = new GridPosition(-1, 0);
         public static GridPosition Left { get; } = new GridPosition(0, -1);
         public static GridPosition Right { get; } = new GridPosition(0, 1);
         public static GridPosition Zero { get; } = new GridPosition(0, 0);
@@ -34,6 +36,15 @@
         public static bool operator !=(GridPosition gr1, GridPosition gr2)
         {
             return gr1.ColumnIndex != gr2.ColumnIndex || gr1.RowIndex != gr2.RowIndex;
+        }
+
+        public override String ToString()
+        {
+            if (this == Down) return "Grid:Down";
+            if (this == Up) return "Grid:Up";
+            if (this == Left) return "Grid:Left";
+            if (this == Right) return "Grid:Right";
+            return "[row,column]".Replace("row", RowIndex.ToString()).Replace("column", ColumnIndex.ToString());
         }
     }
 }
