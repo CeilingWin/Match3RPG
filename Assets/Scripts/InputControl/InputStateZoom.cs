@@ -5,8 +5,8 @@ namespace InputControl
     public class InputStateZoom : IInputState
     {
         private float defaultFieldOfView;
-        private const float MaxZoom = 2.5f;
-        private const float MinZoom = 0.88f;
+        private const float MaxZoom = 3f;
+        private const float MinZoom = 0.77f;
 
         private float zoomLevel;
         private float lastDistance;
