@@ -28,7 +28,7 @@ namespace Match3.FillStrategies
                     if (!slot.CanSetItem()) continue;
                     Debug.Log("cr it");
                     var item = ItemPool.GetIns().GetItem();
-                    item.SetContentId(Random.Range(0, 4));
+                    item.SetMaterial((Enum.Material)Random.Range(0, 4));
                     item.SetPosition(controller.IndexToWorldPosition(rowIndex, columnIndex));
                     jobs.Add(item.Appear());
                     slot.SetItem(item);
@@ -47,7 +47,7 @@ namespace Match3.FillStrategies
                 var itemToHide = slot.GetItem();
                 // todo: do logic gen new item
                 var newItem = ItemPool.GetIns().GetItem();
-                newItem.SetContentId(Random.Range(0,4));
+                newItem.SetMaterial((Enum.Material)Random.Range(0,4));
                 newItem.SetPosition(itemToHide.GetPosition());
                 var task1 = itemToHide.Transform.DOScale(Vector3.zero, 0.25f).OnComplete(() =>
                 {

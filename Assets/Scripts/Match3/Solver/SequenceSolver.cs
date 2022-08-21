@@ -61,7 +61,7 @@ namespace Match3.Solver
         {
             if (!slot1.GetState().CanContainItem() || !slot2.GetState().CanContainItem()) return false;
             if (slot1.GetItem() == null || slot2.GetItem() == null) return false;
-            return slot1.GetItem().GetContentId() == slot2.GetItem().GetContentId();
+            return slot1.GetItem().GetMaterial() == slot2.GetItem().GetMaterial();
         }
     }
 }

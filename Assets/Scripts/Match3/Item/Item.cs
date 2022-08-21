@@ -5,10 +5,11 @@ using core;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using Material = Enum.Material;
 
 public class Item : MonoBehaviour, IItem
 {
-    private int contentId;
+    private Material material;
     private Vector3 defaultScale;
 
     void Awake()
@@ -24,16 +25,16 @@ public class Item : MonoBehaviour, IItem
 
     public Transform Transform => transform;
 
-    public void SetContentId(int id)
+    public void SetMaterial(Material material1)
     {
-        contentId = id;
-        var texture = (Texture) Resources.Load("Textures/Items/tile_" + id);
+        material = material1;
+        var texture = (Texture) Resources.Load("Textures/Items/tile_" + (int)material1);
         GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
 
-    public int GetContentId()
+    public Material GetMaterial()
     {
-        return this.contentId;
+        return this.material;
     }
 
     public void SetPosition(Vector3 pos)

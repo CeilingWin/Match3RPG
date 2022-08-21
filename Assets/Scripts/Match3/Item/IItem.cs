@@ -1,14 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Material = Enum.Material;
 
 namespace core
 {
     public interface IItem
     {
         public Transform Transform { get; }
-        public void SetContentId(int id);
+        public void SetMaterial(Material material);
 
-        public int GetContentId();
+        public Material GetMaterial();
 
         public void SetPosition(Vector3 pos);
         public Vector3 GetPosition();
