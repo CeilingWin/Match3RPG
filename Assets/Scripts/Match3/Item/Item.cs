@@ -27,7 +27,7 @@ public class Item : MonoBehaviour, IItem
     public void SetContentId(int id)
     {
         contentId = id;
-        var texture = (Texture) Resources.Load("Items/tile_" + id);
+        var texture = (Texture) Resources.Load("Textures/Items/tile_" + id);
         GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
 
