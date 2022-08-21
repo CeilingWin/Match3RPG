@@ -210,6 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6987936398769589386}
   - component: {fileID: 6987936398769589387}
+  - component: {fileID: -435078642923289689}
   m_Layer: 0
   m_Name: Brawler
   m_TagString: Untagged
@@ -255,6 +256,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-435078642923289689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6987936398769589388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8bd3c44e79403ea028162012102631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 6987936398769589387}
 --- !u!1 &6987936398802241404
 GameObject:
   m_ObjectHideFlags: 0

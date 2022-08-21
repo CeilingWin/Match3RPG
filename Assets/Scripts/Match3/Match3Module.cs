@@ -40,6 +40,11 @@ namespace Match3
             float z = (-gameBoard.rowCount / 2f + row + 0.5f) * itemSize;
             float x = (-gameBoard.columnCount / 2f + column + 0.5f) * itemSize;
             return new Vector3(x, 0, z);
+        }        
+        
+        public Vector3 IndexToWorldPosition(GridPosition gridPosition)
+        {
+            return IndexToWorldPosition(gridPosition.RowIndex, gridPosition.ColumnIndex);
         }
 
         public bool IsPointOnItem(Vector3 position)
@@ -108,8 +113,6 @@ namespace Match3
                             solvedGridPos.Add(new GridPosition(row, column));
                     }
                 }
-
-                // await UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: cancellationToken);
                 await SolveBoard(solvedGridPos, cancellationToken);
             }
         }
