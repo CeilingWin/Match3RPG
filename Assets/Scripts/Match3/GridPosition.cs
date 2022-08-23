@@ -40,11 +40,12 @@ namespace Match3
 
         public override String ToString()
         {
-            if (this == Down) return "Grid:Down";
-            if (this == Up) return "Grid:Up";
-            if (this == Left) return "Grid:Left";
-            if (this == Right) return "Grid:Right";
             return "[row,column]".Replace("row", RowIndex.ToString()).Replace("column", ColumnIndex.ToString());
+        }
+
+        public override int GetHashCode()
+        {
+            return RowIndex * 10000 + ColumnIndex;
         }
     }
 }

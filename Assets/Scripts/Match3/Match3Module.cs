@@ -94,14 +94,16 @@ namespace Match3
                 return;
             }
             await DoAnimateSwap(slot1, slot2, cancellationToken);
-            var list = new List<GridPosition>() {startPos, endPos};
-            await SolveBoard(list, cancellationToken);
+            var list = new List<GridPosition>() {endPos, startPos};
+            await SolveBoard(list, true,cancellationToken);
         }
 
-        private async UniTask SolveBoard(List<GridPosition> gridPositions, CancellationToken cancellationToken)
+        private async UniTask SolveBoard(List<GridPosition> gridPositions, bool triggerBySwap, CancellationToken cancellationToken)
         {
             var solveData = solver.SolveBoard(gameBoard, gridPositions);
-            await fillStrategy.Solve(gameBoard, solveData, cancellationToken);
+            var solveTask = fillStrategy.Solve(gameBoard, solveData, cancellationToken);
+            var spawnMachinesTask = HandleSpawnMachines(solveData);
+            await UniTask.WhenAll(solveTask, spawnMachinesTask);
             if (solveData.SolvedSlot.Count > 0)
             {
                 List<GridPosition> solvedGridPos = new List<GridPosition>();
@@ -113,8 +115,27 @@ namespace Match3
                             solvedGridPos.Add(new GridPosition(row, column));
                     }
                 }
-                await SolveBoard(solvedGridPos, cancellationToken);
+                await SolveBoard(solvedGridPos, false,cancellationToken);
             }
+        }
+
+        private async UniTask HandleSpawnMachines(SolveData solveData)
+        {
+            var gridPositions = solveData.GetAllTriggerGridPos();
+            var listTask = new List<UniTask>();
+            var rpgModule = Game.instance.RpgModule;
+            foreach (var gridPosition in gridPositions)
+            {
+                var slot = gameBoard.GetSlot(gridPosition);
+                var material = solveData.GetSequenceMaterial(gridPosition);
+                if (slot.CanPutMachine())
+                {
+                    if (!rpgModule.CanSpawnMachine(gridPosition, material)) continue;
+                    listTask.Add(Game.instance.RpgModule.SpawnMachine(gridPosition, material));
+                }
+            }
+
+            await UniTask.WhenAll(listTask);
         }
 
         private async UniTask DoAnimateSwap(ISlot slot1, ISlot slot2, CancellationToken cancellationToken)

@@ -15,7 +15,6 @@ namespace Rpg.Units
         public void Start()
         {
             animator = GetComponent<Animator>();
-            this.AddComponent<Unit>();
         }
 
         public void SetPosition(Vector3 position)

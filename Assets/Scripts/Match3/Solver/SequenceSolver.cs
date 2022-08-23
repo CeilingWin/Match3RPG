@@ -11,6 +11,7 @@ namespace Match3.Solver
             var solveData = new SolveData();
             foreach (var gridPos in positions)
             {
+                if (solveData.Contain(gameBoard.GetSlot(gridPos))) continue;
                 // check horizontal
                 List<GridPosition> horizontalDir = new List<GridPosition>()
                 {
@@ -20,7 +21,7 @@ namespace Match3.Solver
                 var sequenceSlots = GetSequenceByDirection(gameBoard, gridPos, horizontalDir);
                 if (sequenceSlots.Count >= GameConst.MinLengthSequence)
                 {
-                    solveData.AddSlot(sequenceSlots);
+                    solveData.AddSlot(gridPos, sequenceSlots);
                 }
                 // check vertical
                 List<GridPosition> verticalDir = new List<GridPosition>()
@@ -31,7 +32,7 @@ namespace Match3.Solver
                 sequenceSlots = GetSequenceByDirection(gameBoard, gridPos, verticalDir);
                 if (sequenceSlots.Count >= GameConst.MinLengthSequence)
                 {
-                    solveData.AddSlot(sequenceSlots);
+                    solveData.AddSlot(gridPos, sequenceSlots);
                 }
             }
             
