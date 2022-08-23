@@ -1,5 +1,6 @@
 ﻿using System;
 using Match3;
+using Rpg.Ability;
 using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -12,9 +13,15 @@ namespace Rpg.Units
         private Animator animator;
         private GridPosition gridPosition;
 
+        private void Awake()
+        {
+        }
+
         public void Start()
         {
             animator = GetComponent<Animator>();
+            var t = this.AddComponent<Move>();
+            t.Test();
         }
 
         public void SetPosition(Vector3 position)

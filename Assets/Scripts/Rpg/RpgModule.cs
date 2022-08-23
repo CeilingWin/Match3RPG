@@ -17,8 +17,22 @@ namespace Rpg
 
         public async UniTask SpawnMachine(GridPosition gridPosition, Material material)
         {
-            var unit = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/Brawler"));
+            string machineName;
+            switch (material)
+            {
+                case Material.Chemistry:
+                    machineName = "Paralyzer";
+                    break;
+                case Material.Energy:
+                    machineName = "EnergyBomb";
+                    break;
+                default:
+                    machineName = "Brawler";
+                    break;
+            }
+            var unit = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
             unit.transform.position = Game.instance.Match3Module.IndexToWorldPosition(gridPosition);
+            listUnits.Add(unit.GetComponent<Units.Unit>());
             await UniTask.CompletedTask;
         }
 
