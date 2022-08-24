@@ -30,15 +30,21 @@ namespace Rpg
                     machineName = "Brawler";
                     break;
             }
-            var unit = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
-            unit.transform.position = Game.instance.Match3Module.IndexToWorldPosition(gridPosition);
-            listUnits.Add(unit.GetComponent<Units.Unit>());
+            var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
+            var unit = machineObject.GetComponent<Units.Unit>();
+            unit.SetGridPosition(gridPosition);
+            listUnits.Add(unit);
             await UniTask.CompletedTask;
         }
 
         public bool CanSpawnMachine(GridPosition gridPosition, Material material)
         {
-            return material != Material.Biology;
+            return material != Material.Biology && GetUnitAtGridPos(gridPosition) == null;
+        }
+
+        public Units.Unit GetUnitAtGridPos(GridPosition gridPosition)
+        {
+            return listUnits.Find(unit => unit.GetGridPosition() == gridPosition);
         }
     }
 }

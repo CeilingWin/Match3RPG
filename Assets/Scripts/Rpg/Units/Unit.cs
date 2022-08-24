@@ -10,7 +10,6 @@ namespace Rpg.Units
 {
     public class Unit : MonoBehaviour
     {
-        private Animator animator;
         private GridPosition gridPosition;
 
         private void Awake()
@@ -19,9 +18,11 @@ namespace Rpg.Units
 
         public void Start()
         {
-            animator = GetComponent<Animator>();
-            var t = this.AddComponent<Move>();
-            t.Test();
+            this.AddComponent<Move>();
+            // todo: rm this
+            var m = this.GetComponent<Move>();
+            m.MoveTo(GridPosition.Zero);
+
         }
 
         public void SetPosition(Vector3 position)
@@ -33,6 +34,11 @@ namespace Rpg.Units
         {
             this.gridPosition = gridPosition;
             transform.position = Game.instance.Match3Module.IndexToWorldPosition(gridPosition);
+        }
+
+        public GridPosition GetGridPosition()
+        {
+            return gridPosition;
         }
     }
 }

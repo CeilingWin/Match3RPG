@@ -1892,6 +1892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7613206787459734755}
   - component: {fileID: 7613206787469587301}
+  - component: {fileID: 5730970339287770389}
   m_Layer: 0
   m_Name: EnergyBomb
   m_TagString: Untagged
@@ -1931,13 +1932,25 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 698192147bc31de4488e16571dc366be, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5730970339287770389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7613206787460088067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8bd3c44e79403ea028162012102631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7613206787460088069
 GameObject:
   m_ObjectHideFlags: 0
