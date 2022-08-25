@@ -19,10 +19,6 @@ namespace Rpg.Units
         public void Start()
         {
             this.AddComponent<Move>();
-            // todo: rm this
-            // var m = this.GetComponent<Move>();
-            // m.MoveTo(GridPosition.Zero);
-
         }
 
         public void SetPosition(Vector3 position)
