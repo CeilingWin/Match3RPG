@@ -102,7 +102,7 @@ namespace Match3
         {
             var solveData = solver.SolveBoard(gameBoard, gridPositions);
             var solveTask = fillStrategy.Solve(gameBoard, solveData, cancellationToken);
-            var spawnMachinesTask = HandleSpawnMachines(solveData);
+            var spawnMachinesTask = HandleSpawnMachines(solveData, cancellationToken);
             await UniTask.WhenAll(solveTask, spawnMachinesTask);
             if (solveData.SolvedSlot.Count > 0)
             {
@@ -119,7 +119,7 @@ namespace Match3
             }
         }
 
-        private async UniTask HandleSpawnMachines(SolveData solveData)
+        private async UniTask HandleSpawnMachines(SolveData solveData, CancellationToken cancellationToken)
         {
             var gridPositions = solveData.GetAllTriggerGridPos();
             var listTask = new List<UniTask>();
@@ -131,7 +131,7 @@ namespace Match3
                 if (slot.CanPutMachine())
                 {
                     if (!rpgModule.CanSpawnMachine(gridPosition, material)) continue;
-                    listTask.Add(Game.instance.RpgModule.SpawnMachine(gridPosition, material));
+                    listTask.Add(Game.instance.RpgModule.SpawnMachine(gridPosition, material, cancellationToken));
                 }
             }
 

@@ -50,7 +50,6 @@ public class Item : MonoBehaviour, IItem
     public async UniTask Appear(float delayTime = 0)
     {
         transform.localScale = Vector3.zero;
-        Debug.Log(defaultScale);
         await transform.DOScale(defaultScale, 0.7f)
             .SetEase(Ease.OutBack)
             .SetDelay(delayTime)

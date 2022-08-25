@@ -44,5 +44,10 @@ namespace Rpg.Ability
                 .SetEase(Ease.OutBack)
                 .WithCancellation(this.GetCancellationTokenOnDestroy());
         }
+
+        public UniTask RotateToMonsterSpawner()
+        {
+            return DoActionRotateTo(transform.forward, Vector3.forward);
+        }
     }
 }

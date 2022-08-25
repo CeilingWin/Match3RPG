@@ -23,10 +23,8 @@ namespace Match3.FillStrategies
             {
                 for (var columnIndex = 0; columnIndex < gameBoard.columnCount; columnIndex++)
                 {
-                    Debug.Log(rowIndex + "_" + columnIndex);
                     var slot = gameBoard.Slots[rowIndex, columnIndex];
                     if (!slot.CanSetItem()) continue;
-                    Debug.Log("cr it");
                     var item = ItemPool.GetIns().GetItem();
                     item.SetMaterial((Enum.Material)Random.Range(0, 4));
                     item.SetPosition(controller.IndexToWorldPosition(rowIndex, columnIndex));

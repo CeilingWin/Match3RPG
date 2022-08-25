@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Match3;
 using Rpg.Ability;
 using Unity.VisualScripting;
@@ -8,16 +9,13 @@ using UnityEngine.Serialization;
 
 namespace Rpg.Units
 {
-    public class Unit : MonoBehaviour
+    public abstract class Unit : MonoBehaviour
     {
         private GridPosition gridPosition;
 
-        private void Awake()
-        {
-        }
-
         public void Start()
         {
+            this.AddComponent<Stat>();
             this.AddComponent<Move>();
         }
 
@@ -36,5 +34,7 @@ namespace Rpg.Units
         {
             return gridPosition;
         }
+
+        public abstract UniTask Attack();
     }
 }

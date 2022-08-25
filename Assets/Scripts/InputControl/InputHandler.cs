@@ -43,25 +43,25 @@ namespace InputControl
 
         public void OnTouchCanceled()
         {
-            Debug.Log("on touch cancel");
+            // Debug.Log("on touch cancel");
             TouchCanceled?.Invoke(this, EventArgs.Empty);
         }
 
         public void OnTouchBegan(Vector3 e)
         {
-            Debug.Log("on touch began");
+            // Debug.Log("on touch began");
             TouchBegan?.Invoke(this, e);
         }
 
         public void OnTouchMoved(Vector3 e)
         {
-            Debug.Log("on touch moved");
+            // Debug.Log("on touch moved");
             TouchMoved?.Invoke(this, e);
         }
 
         public void OnTouchEnded(Vector3 e)
         {
-            Debug.Log("on touch ended");
+            // Debug.Log("on touch ended");
             TouchEnded?.Invoke(this, e);
         }
     }

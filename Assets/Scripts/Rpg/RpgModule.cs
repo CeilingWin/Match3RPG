@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Match3;
+using Rpg.Ability;
 using UnityEngine;
 using Material = Enum.Material;
 
@@ -8,14 +10,21 @@ namespace Rpg
 {
     public class RpgModule
     {
-        private List<Units.Unit> listUnits;
+        private readonly List<Units.Unit> listUnits;
+        private YourBase yourBase;
 
         public RpgModule()
         {
             listUnits = new List<Units.Unit>();
+            yourBase = Game.instance.YourBase.GetComponent<YourBase>();
         }
 
-        public async UniTask SpawnMachine(GridPosition gridPosition, Material material)
+        public async UniTask Init(CancellationToken cancellationToken)
+        {
+            await UniTask.CompletedTask;
+        }
+
+        public async UniTask SpawnMachine(GridPosition gridPosition, Material material, CancellationToken cancellationToken)
         {
             string machineName;
             switch (material)
@@ -34,6 +43,8 @@ namespace Rpg
             var unit = machineObject.GetComponent<Units.Unit>();
             unit.SetGridPosition(gridPosition);
             listUnits.Add(unit);
+            await UniTask.NextFrame();
+            unit.GetComponent<Attack>().DoAttack();
         }
 
         public bool CanSpawnMachine(GridPosition gridPosition, Material material)
@@ -44,6 +55,23 @@ namespace Rpg
         public Units.Unit GetUnitAtGridPos(GridPosition gridPosition)
         {
             return listUnits.Find(unit => unit.GetGridPosition() == gridPosition);
+        }
+
+        public async UniTask GenerateMonster(CancellationToken cancellationToken)
+        {
+            Debug.Log("GenerateMonster");
+            await UniTask.CompletedTask;
+        }
+
+        public async UniTask LetMachinesAttack(CancellationToken cancellationToken)
+        {
+            Debug.Log("LetMachinesAttack");
+            await UniTask.CompletedTask;
+        }
+        public async UniTask LetMonstersAttack(CancellationToken cancellationToken)
+        {
+            Debug.Log("LetMonstersAttack");
+            await UniTask.CompletedTask;
         }
     }
 }
