@@ -476,6 +476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemPrefab: {fileID: 5943708710947741239, guid: c5d498d7ccf82394e84a1beaa2582e9c,
     type: 3}
+  YourBase: {fileID: 2072383446}
   InputHandler: {fileID: 1086204205}
 --- !u!4 &1086204204
 Transform:
