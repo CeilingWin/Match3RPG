@@ -15,6 +15,7 @@ namespace Rpg.Ability
 
         private readonly int walkAction = Animator.StringToHash("Walk");
         private readonly int idleAction = Animator.StringToHash("Idle");
+        private readonly int walkSlowAnim = Animator.StringToHash("WalkSlow");
         private void OnEnable()
         {
             animator = GetComponent<Animator>();
@@ -27,12 +28,11 @@ namespace Rpg.Ability
             var timeMove = Vector3.Distance(desPosition, position) / MoveSpeed;
             animator.Play(walkAction);
             var rotationJob = DoActionRotateTo(transform.forward, desPosition - position);
-            var moveJob = transform.DOMove(desPosition, timeMove).WithCancellation(this.GetCancellationTokenOnDestroy());
+            var moveJob = transform.DOMove(desPosition, timeMove).SetEase(Ease.Linear).WithCancellation(this.GetCancellationTokenOnDestroy());
             await UniTask.WhenAll(moveJob, rotationJob);
-            var rotateBackJob = DoActionRotateTo(desPosition - position, Vector3.forward);
             animator.Play(idleAction);
+            var rotateBackJob = DoActionRotateTo(desPosition - position, Vector3.forward);
             await rotateBackJob;
-            // todo: fix move action
         }
 
         private UniTask DoActionRotateTo(Vector3 currentDirection, Vector3 direction)
@@ -40,7 +40,7 @@ namespace Rpg.Ability
             var desRotation = Quaternion.LookRotation(direction - currentDirection);
             var currentRotation = Quaternion.Euler(currentDirection);
             var timeRotation = Quaternion.Angle(desRotation, currentRotation) / RotationSpeed;
-            return transform.DORotateQuaternion(desRotation, timeRotation)
+            return transform.DORotateQuaternion(desRotation, 0)
                 .SetEase(Ease.OutBack)
                 .WithCancellation(this.GetCancellationTokenOnDestroy());
         }

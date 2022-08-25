@@ -20,8 +20,8 @@ namespace Rpg.Units
         {
             this.AddComponent<Move>();
             // todo: rm this
-            var m = this.GetComponent<Move>();
-            m.MoveTo(GridPosition.Zero);
+            // var m = this.GetComponent<Move>();
+            // m.MoveTo(GridPosition.Zero);
 
         }
 

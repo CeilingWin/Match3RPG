@@ -34,7 +34,6 @@ namespace Rpg
             var unit = machineObject.GetComponent<Units.Unit>();
             unit.SetGridPosition(gridPosition);
             listUnits.Add(unit);
-            await UniTask.CompletedTask;
         }
 
         public bool CanSpawnMachine(GridPosition gridPosition, Material material)
