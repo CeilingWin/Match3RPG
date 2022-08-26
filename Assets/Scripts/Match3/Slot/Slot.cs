@@ -10,6 +10,7 @@ namespace Unit
         private IStateSlot state;
         public Slot(IStateSlot state)
         {
+            item = null;
             SetState(state);
         }
         public void SetState(IStateSlot state)

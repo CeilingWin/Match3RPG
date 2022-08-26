@@ -17,7 +17,7 @@ namespace Match3
 
 
         private readonly GameObject itemPrefab;
-        private readonly Math3Board gameBoard;
+        private readonly Match3Board gameBoard;
         private readonly IFillStrategy fillStrategy;
         private readonly IMatch3Solver solver;
 
@@ -26,7 +26,7 @@ namespace Match3
             // todo: load config
             this.itemPrefab = itemPrefab;
             this.itemSize = 1.1f;
-            gameBoard = new Math3Board(8, 8);
+            gameBoard = new Match3Board(8, 8);
             fillStrategy = new FadeInStrategy(this);
             solver = new SequenceSolver();
         }

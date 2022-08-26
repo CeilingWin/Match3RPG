@@ -6,7 +6,7 @@ namespace Match3.FillStrategies
 {
     public interface IFillStrategy
     {
-        public UniTask Fill(Math3Board gameBoard, CancellationToken cancellationToken);
-        public UniTask Solve(Math3Board gameBoard,  SolveData solveData, CancellationToken cancellationToken);
+        public UniTask Fill(Match3Board gameBoard, CancellationToken cancellationToken);
+        public UniTask Solve(Match3Board gameBoard,  SolveData solveData, CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace InputControl
 {
@@ -33,8 +35,24 @@ namespace InputControl
         {
             var currentPoint = Input.touches[0].position;
             var deltaX = currentPoint.x - lastPoint.x;
-            float angle = deltaX * Time.deltaTime * InputStateMoveCamera.SPEED;
-            if (currentPoint.y > Screen.height / 2f) angle = -angle;
+            var deltaY = currentPoint.y - lastPoint.y;
+            float delta, midPivot, currentP, sign;
+            if (Math.Abs(deltaX) > Math.Abs(deltaY))
+            {
+                delta = deltaX;
+                midPivot = Screen.height / 2f;
+                currentP = currentPoint.y;
+                sign = 1f;
+            }
+            else
+            {
+                delta = deltaY;
+                midPivot = Screen.width / 2f;
+                currentP = currentPoint.x;
+                sign = -1f;
+            }
+            float angle = sign * delta * Time.deltaTime * InputStateMoveCamera.SPEED;
+            if (currentP > midPivot) angle = -angle;
             Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, angle);
             lastPoint = currentPoint; 
         }

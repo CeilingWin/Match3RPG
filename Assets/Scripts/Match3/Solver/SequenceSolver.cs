@@ -6,7 +6,7 @@ namespace Match3.Solver
 {
     public class SequenceSolver : IMatch3Solver
     {
-        public SolveData SolveBoard(Math3Board gameBoard, List<GridPosition> positions)
+        public SolveData SolveBoard(Match3Board gameBoard, List<GridPosition> positions)
         {
             var solveData = new SolveData();
             foreach (var gridPos in positions)
@@ -39,7 +39,7 @@ namespace Match3.Solver
             return solveData;
         }
 
-        private static HashSet<ISlot> GetSequenceByDirection(Math3Board gameBoard, GridPosition startPos, List<GridPosition> dirs)
+        private static HashSet<ISlot> GetSequenceByDirection(Match3Board gameBoard, GridPosition startPos, List<GridPosition> dirs)
         {
             var slots = new HashSet<ISlot>();
             var slotToCheck = gameBoard.GetSlot(startPos);
