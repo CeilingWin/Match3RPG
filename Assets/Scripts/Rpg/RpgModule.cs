@@ -17,10 +17,12 @@ namespace Rpg
         {
             listUnits = new List<Units.Unit>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
+            yourBase.SetMaxHp(100);
         }
 
         public async UniTask Init(CancellationToken cancellationToken)
         {
+            // load config
             await UniTask.CompletedTask;
         }
 
@@ -43,7 +45,7 @@ namespace Rpg
             var unit = machineObject.GetComponent<Units.Unit>();
             unit.SetGridPosition(gridPosition);
             listUnits.Add(unit);
-            await UniTask.NextFrame();
+            await UniTask.NextFrame(cancellationToken);
             unit.GetComponent<Attack>().DoAttack();
         }
 
@@ -72,6 +74,11 @@ namespace Rpg
         {
             Debug.Log("LetMonstersAttack");
             await UniTask.CompletedTask;
+        }
+
+        public YourBase GetYourBase()
+        {
+            return yourBase;
         }
     }
 }

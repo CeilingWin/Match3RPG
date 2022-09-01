@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
     
     // game state
     private GameState gameState;
-    private int NumWave = 4;
+    private int numWave = 4;
 
     // handle input
     private Vector3 startPosition;
@@ -83,7 +83,7 @@ public class Game : MonoBehaviour
                 currentTask = RpgModule.LetMonstersAttack(cancellationToken).ToAsyncLazy();
                 break;
             case GamePhase.MonsterAttack:
-                NextWave();
+                CheckNextWave();
                 break;
             case GamePhase.Ended:
                 // todo:
@@ -91,9 +91,9 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void NextWave()
+    private void CheckNextWave()
     {
-        if (gameState.GetWave() > NumWave)
+        if (gameState.GetWave() > numWave)
         {
             gameState.SetPhase(GamePhase.Ended);
         }
