@@ -18,6 +18,8 @@ public class Game : MonoBehaviour
     [SerializeField]
     private InputHandler InputHandler;
 
+    [SerializeField] private GameUI GameUI;
+
     public Match3Module Match3Module { get; private set; }
     public RpgModule RpgModule { get; private set; }
     private AsyncLazy currentTask;
@@ -25,7 +27,7 @@ public class Game : MonoBehaviour
     
     // game state
     private GameState gameState;
-    private int numWave = 4;
+    private int numWave = 14;
     private Machine selectedUnit;
 
     // handle input
