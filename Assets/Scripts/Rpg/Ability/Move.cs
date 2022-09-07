@@ -38,12 +38,14 @@ namespace Rpg.Ability
 
         private UniTask DoActionRotateTo(Vector3 currentDirection, Vector3 direction)
         {
-            var desRotation = Quaternion.LookRotation(direction - currentDirection);
-            var currentRotation = Quaternion.Euler(currentDirection);
-            var timeRotation = Quaternion.Angle(desRotation, currentRotation) / RotationSpeed;
-            return transform.DORotateQuaternion(desRotation, 0)
-                .SetEase(Ease.OutBack)
-                .WithCancellation(this.GetCancellationTokenOnDestroy());
+            // var desRotation = Quaternion.LookRotation(direction - currentDirection);
+            // var currentRotation = Quaternion.Euler(currentDirection);
+            // var timeRotation = Quaternion.Angle(desRotation, currentRotation) / RotationSpeed;
+            // return transform.DORotateQuaternion(desRotation, 0)
+            //     .SetEase(Ease.OutBack)
+            //     .WithCancellation(this.GetCancellationTokenOnDestroy());
+            transform.rotation = Quaternion.LookRotation(direction);
+            return UniTask.CompletedTask;
         }
 
         public UniTask RotateToMonsterSpawner()
