@@ -51,7 +51,14 @@ namespace Match3
 
         public ISlot GetSlot(GridPosition pos)
         {
-            return Slots[pos.RowIndex, pos.ColumnIndex];
+            try
+            {
+                return Slots[pos.RowIndex, pos.ColumnIndex];
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public GridPosition GetSlotPosition(ISlot slot)

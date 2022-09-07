@@ -30,10 +30,11 @@ namespace Rpg.Units
             var currentPos = GetGridPosition();
             var distance = GridPosition.Distance(currentPos, gridPosition);
             var machineAtPos = Game.instance.RpgModule.GetMachine(gridPosition);
+            var slot = Game.instance.Match3Module.GameBoard.GetSlot(gridPosition);
             return distance <= GetComponent<Stat>().GetSpeed() 
                    && currentPos != gridPosition
                    && machineAtPos == null
-                   && Game.instance.Match3Module.IsPointOnItem(gridPosition);
+                   && (slot != null && slot.CanPutMachine());
         }
     }
 }
