@@ -5,11 +5,9 @@ using DefaultNamespace;
 using InputControl;
 using Match3;
 using Rpg;
-using Unit;
-using Unity.VisualScripting;
+using Rpg.Ability;
+using Rpg.Units;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 public class Game : MonoBehaviour
 {
@@ -28,6 +26,7 @@ public class Game : MonoBehaviour
     // game state
     private GameState gameState;
     private int numWave = 4;
+    private Machine selectedUnit;
 
     // handle input
     private Vector3 startPosition;
@@ -118,7 +117,7 @@ public class Game : MonoBehaviour
         if (!CanControlGame()) return;
         if (Vector3.Distance(boardPosition, startPosition) > GameConst.MinTouchDistance)
         {
-            if (Match3Module.IsPointOnItem(startPosition))
+            if (Match3Module.IsPointOnItem(startPosition) && selectedUnit == null)
             {
                 currentTask = MoveItem(startPosition, boardPosition, cancellationToken).ToAsyncLazy();
             }
@@ -127,12 +126,33 @@ public class Game : MonoBehaviour
 
     private void OnTouchEnded(object sender, Vector3 boardPosition)
     {
-        // Debug.Log("end: " +match3Module.PositionToGridPosition(boardPosition) + " with stp" + match3Module.PositionToGridPosition(startPosition));
-        // Debug.Log("dir" + match3Module.GetMoveDirection(startPosition, boardPosition));
         if (!CanControlGame()) return;
         if (Vector3.Distance(boardPosition, startPosition) < GameConst.MinTouchDistance)
         {
-            Debug.Log("click");
+            if (gameState.GetCurrentPhase() != GamePhase.PlayerMove) return;
+            var gridPosition = Match3Module.PositionToGridPosition(boardPosition);
+            if (selectedUnit == null)
+            {
+                var unit = RpgModule.GetMachine(gridPosition);
+                if (!unit) return;
+                selectedUnit = unit;
+                if (!selectedUnit.CanMove()) return;
+                RpgModule.ShowMoveAbleArea(selectedUnit);
+            }
+            else
+            {
+                if (selectedUnit.CanMoveTo(gridPosition))
+                {
+                    currentTask = selectedUnit.GetComponent<Move>().MoveTo(gridPosition).ToAsyncLazy();
+                    gameState.DecreaseNumMove();
+                }
+                else
+                {
+                    Debug.Log("cancel move machine");
+                }
+                RpgModule.HideMoveAbleArea();
+                selectedUnit = null;
+            }
         }
         else
         {
@@ -150,6 +170,11 @@ public class Game : MonoBehaviour
         var endGridPos = startGridPos + dir;
         gameState.DecreaseNumMove();
         await Match3Module.Swap(startGridPos, endGridPos, cancellationToken);
+    }
+
+    private async UniTask MoveUnit(Vector3 desPosition)
+    {
+        await new UniTask();
     }
 
     private bool CanControlGame()

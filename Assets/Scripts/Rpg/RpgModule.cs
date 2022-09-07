@@ -3,19 +3,23 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Match3;
 using Rpg.Ability;
+using Rpg.Units;
 using UnityEngine;
-using Material = Enum.Material;
+using Enum;
+using Material = UnityEngine.Material;
 
 namespace Rpg
 {
     public class RpgModule
     {
-        private readonly List<Units.Unit> listUnits;
-        private YourBase yourBase;
+        private readonly List<Machine> listUnits;
+        private readonly YourBase yourBase;
+        private List<GameObject> listMoveArea;
 
         public RpgModule()
         {
-            listUnits = new List<Units.Unit>();
+            listUnits = new List<Machine>();
+            listMoveArea = new List<GameObject>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
             yourBase.SetMaxHp(100);
         }
@@ -26,37 +30,35 @@ namespace Rpg
             await UniTask.CompletedTask;
         }
 
-        public async UniTask SpawnMachine(GridPosition gridPosition, Material material, CancellationToken cancellationToken)
+        public async UniTask SpawnMachine(GridPosition gridPosition, Enum.Material material,
+            CancellationToken cancellationToken)
         {
             string machineName;
             switch (material)
             {
-                case Material.Chemistry:
+                case Enum.Material.Chemistry:
                     machineName = "Paralyzer";
                     break;
-                case Material.Energy:
+                case Enum.Material.Energy:
                     machineName = "EnergyBomb";
                     break;
                 default:
                     machineName = "Brawler";
                     break;
             }
+
             var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
-            var unit = machineObject.GetComponent<Units.Unit>();
-            unit.SetGridPosition(gridPosition);
-            listUnits.Add(unit);
-            await UniTask.NextFrame(cancellationToken);
-            unit.GetComponent<Attack>().DoAttack();
+            var machine = machineObject.GetComponent<Machine>();
+            machine.SetGridPosition(gridPosition);
+            listUnits.Add(machine);
+            Debug.Log("spawned new unit");
+            // await UniTask.NextFrame(cancellationToken);
+            // unit.GetComponent<Attack>().DoAttack();
         }
 
-        public bool CanSpawnMachine(GridPosition gridPosition, Material material)
+        public bool CanSpawnMachine(GridPosition gridPosition, Enum.Material material)
         {
-            return material != Material.Biology && GetUnitAtGridPos(gridPosition) == null;
-        }
-
-        public Units.Unit GetUnitAtGridPos(GridPosition gridPosition)
-        {
-            return listUnits.Find(unit => unit.GetGridPosition() == gridPosition);
+            return material != Enum.Material.Biology && GetMachine(gridPosition) == null;
         }
 
         public async UniTask GenerateMonster(CancellationToken cancellationToken)
@@ -70,6 +72,7 @@ namespace Rpg
             Debug.Log("LetMachinesAttack");
             await UniTask.CompletedTask;
         }
+
         public async UniTask LetMonstersAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMonstersAttack");
@@ -79,6 +82,44 @@ namespace Rpg
         public YourBase GetYourBase()
         {
             return yourBase;
+        }
+
+        public Machine GetMachine(GridPosition gridPosition)
+        {
+            return listUnits.Find(unit => unit.GetGridPosition() == gridPosition);
+        }
+
+        public void ShowMoveAbleArea(Machine machine)
+        {
+            var boardSize = Game.instance.Match3Module.GetBoardSize();
+            for (var rowIndex = 0; rowIndex < boardSize.RowIndex; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < boardSize.ColumnIndex; columnIndex++)
+                {
+                    var tile = Object.Instantiate(Resources.Load("Prefabs/MoveArea") as GameObject);
+                    var position = new GridPosition(rowIndex, columnIndex);
+                    Material material;
+                    if (machine.CanMoveTo(position))
+                    {
+                        material = Resources.Load<Material>("Materials/MoveArea");
+                    }
+                    else
+                    {
+                        material = Resources.Load<Material>("Materials/CantMoveArea");
+                    }
+                    tile.GetComponent<MeshRenderer>().sharedMaterial = material;
+                    var worldPosition = Game.instance.Match3Module.IndexToWorldPosition(position);
+                    worldPosition.y = 0.02f;
+                    tile.transform.position = worldPosition;
+                    listMoveArea.Add(tile);
+                }
+            }
+        }
+
+        public void HideMoveAbleArea()
+        {
+            listMoveArea.ForEach(Object.Destroy);
+            listMoveArea.Clear();
         }
     }
 }

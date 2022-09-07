@@ -6,10 +6,13 @@ namespace Match3
     {
         public int RowIndex;
         public int ColumnIndex;
+        private readonly int hashInit;
+
         public GridPosition(int rowIndex, int columnIndex)
         {
             RowIndex = rowIndex;
             ColumnIndex = columnIndex;
+            hashInit = RowIndex * 10000 + ColumnIndex;
         }
 
         public static GridPosition Up { get; } = new GridPosition(1, 0);
@@ -38,6 +41,12 @@ namespace Match3
             return gr1.ColumnIndex != gr2.ColumnIndex || gr1.RowIndex != gr2.RowIndex;
         }
 
+        public static float Distance(GridPosition gr1, GridPosition gr2)
+        {
+            var d = gr1 - gr2;
+            return (float) Math.Sqrt(d.ColumnIndex * d.ColumnIndex + d.RowIndex * d.RowIndex);
+        }
+
         public override String ToString()
         {
             return "[row,column]".Replace("row", RowIndex.ToString()).Replace("column", ColumnIndex.ToString());
@@ -45,7 +54,7 @@ namespace Match3
 
         public override int GetHashCode()
         {
-            return RowIndex * 10000 + ColumnIndex;
+            return hashInit;
         }
     }
 }

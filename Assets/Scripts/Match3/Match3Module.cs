@@ -52,6 +52,11 @@ namespace Match3
             var pos = PositionToGridPosition(position);
             return gameBoard.IsPointInBoard(pos);
         }
+        
+        public bool IsPointOnItem(GridPosition gridPosition)
+        {
+            return gameBoard.IsPointInBoard(gridPosition);
+        }
 
         public GridPosition PositionToGridPosition(Vector3 position)
         {
@@ -150,6 +155,11 @@ namespace Match3
             slot1.SetItem(item2);
             slot2.SetItem(item1);
             await UniTask.WhenAll(task1, task2);
+        }
+
+        public GridPosition GetBoardSize()
+        {
+            return new GridPosition(gameBoard.rowCount, gameBoard.columnCount);
         }
     }
 }

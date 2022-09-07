@@ -33,6 +33,7 @@ namespace Rpg.Ability
             animator.Play(idleAction);
             var rotateBackJob = DoActionRotateTo(desPosition - position, Vector3.forward);
             await rotateBackJob;
+            GetComponent<Units.Unit>()?.SetGridPosition(gridPosition);
         }
 
         private UniTask DoActionRotateTo(Vector3 currentDirection, Vector3 direction)

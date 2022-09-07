@@ -7,13 +7,15 @@ namespace Rpg.Ability
     {
         private int hp;
         private int speed;
+        private int attackSpeed;
         private int damage;
         private int countDown;
 
-        public void SetStat(int hp, int speed, int damage, int countDown)
+        public void SetStat(int hp, int speed, int attackSpeed, int damage, int countDown)
         {
             this.hp = hp;
             this.speed = speed;
+            this.attackSpeed = attackSpeed;
             this.damage = damage;
             this.countDown = countDown;
         }
