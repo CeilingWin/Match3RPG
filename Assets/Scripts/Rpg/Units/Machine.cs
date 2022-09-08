@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Rpg.Units
 {
-    public class Machine : Unit
+    public abstract class Machine : Unit
     {
         new void Start()
         {

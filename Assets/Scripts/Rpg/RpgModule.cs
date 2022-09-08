@@ -63,7 +63,9 @@ namespace Rpg
 
         public async UniTask GenerateMonster(CancellationToken cancellationToken)
         {
-            Debug.Log("GenerateMonster");
+            var currentWave = Game.instance.GetState().GetWave();
+            Debug.Log("GenerateMonster wave " + currentWave);
+
             await UniTask.CompletedTask;
         }
 
