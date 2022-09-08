@@ -15,9 +15,16 @@ namespace Rpg.Units
             this.AddComponent<Attack>();
         }
 
-        public override UniTask Attack()
+        public override async UniTask Attack()
         {
-            throw new System.NotImplementedException();
+            var monsters = GetComponent<IDetectAbility>().DetectAllUnits<Monster>();
+            if (monsters.Count == 0) return;
+            var target = monsters[0];
+            if (!target) return;
+            Debug.Log("attack " + target);
+            transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
+            await GetComponent<Attack>().DoAttack();
+            transform.rotation = Quaternion.LookRotation(Vector3.forward);
         }
 
         public override UniTask Die()
@@ -34,11 +41,11 @@ namespace Rpg.Units
         {
             var currentPos = GetGridPosition();
             var distance = GridPosition.Distance(currentPos, gridPosition);
-            var machineAtPos = Game.instance.RpgModule.GetMachine(gridPosition);
+            var unit = Game.instance.RpgModule.GetUnit<Unit>(gridPosition);
             var slot = Game.instance.Match3Module.GameBoard.GetSlot(gridPosition);
-            return distance <= GetComponent<Stat>().GetSpeed() 
+            return distance <= GetComponent<Stat>().GetSpeed()
                    && currentPos != gridPosition
-                   && machineAtPos == null
+                   && unit == null
                    && (slot != null && slot.CanPutUnit());
         }
     }

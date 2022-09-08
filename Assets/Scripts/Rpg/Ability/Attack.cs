@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Rpg.Ability
 {
@@ -11,9 +13,11 @@ namespace Rpg.Ability
             animator = GetComponent<Animator>();
         }
 
-        public void DoAttack()
+        public async UniTask DoAttack()
         {
             animator.Play(attackAction);
+            var idleAction = Animator.StringToHash("Idle");
+            await UniTask.WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).shortNameHash == idleAction);
         }
     }
 }

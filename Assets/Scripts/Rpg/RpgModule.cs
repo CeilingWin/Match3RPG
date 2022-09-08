@@ -125,8 +125,10 @@ namespace Rpg
         public async UniTask LetMachinesAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMachinesAttack");
-            // todo: attack
-            
+            foreach (var machine in listMachines)
+            {
+                await machine.Attack();
+            }
             // check count down
             List<Machine> listMachineDied = new List<Machine>();
             List<UniTask> jobs = new List<UniTask>();
@@ -166,6 +168,24 @@ namespace Rpg
         public Monster GetMonster(GridPosition gridPosition)
         {
             return listMonsters.Find(monster => monster.GetGridPosition() == gridPosition);
+        }
+
+        public Units.Unit GetUnit<T>(GridPosition gridPosition) where T : Units.Unit
+        {
+            var machine = GetMachine(gridPosition);
+            var monster = GetMonster(gridPosition);
+            if (typeof(T) == typeof(Machine))
+            {
+                return machine;
+            } else if (typeof(T) == typeof(Monster))
+            {
+                return monster;
+            }
+            else
+            {
+                if (machine) return machine;
+                return monster;
+            }
         }
 
         public void ShowMoveAbleArea(Machine machine)
