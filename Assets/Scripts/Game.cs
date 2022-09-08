@@ -191,6 +191,16 @@ public class Game : MonoBehaviour
         return currentTask == null || currentTask.Task.Status.IsCompleted();
     }
 
+    public GameState GetState()
+    {
+        return gameState;
+    }
+
+    public int GetNumberWave()
+    {
+        return numWave;
+    }
+
     private void OnDestroy()
     {
         InputHandler.TouchBegan -= OnTouchBegan;

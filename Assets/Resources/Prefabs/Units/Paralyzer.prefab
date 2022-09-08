@@ -1772,7 +1772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6057482002107759825}
   - component: {fileID: 6057482002098197335}
-  - component: {fileID: -8218543176558544271}
+  - component: {fileID: 2074563554598027818}
   m_Layer: 0
   m_Name: Paralyzer
   m_TagString: Untagged
@@ -1818,7 +1818,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-8218543176558544271
+--- !u!114 &2074563554598027818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1827,7 +1827,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6057482002107719985}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4dbb85e04784469956e25edcb5708e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b0abcabd221405788702db9061e19de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6057482002107719987

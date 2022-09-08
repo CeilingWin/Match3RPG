@@ -18,8 +18,11 @@ public class GameUI : MonoBehaviour
         UpdateStates();
     }
 
-    public void UpdateStates()
+    private void UpdateStates()
     {
-        // todo:
+        var state = Game.instance.GetState();
+        var currentWave = state.GetWave();
+        var maxWave = Game.instance.GetNumberWave();
+        TextWave.text = "Wave: " + currentWave + "/" + maxWave;
     }
 }
