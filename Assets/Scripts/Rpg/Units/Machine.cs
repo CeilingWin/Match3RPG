@@ -39,7 +39,7 @@ namespace Rpg.Units
             return distance <= GetComponent<Stat>().GetSpeed() 
                    && currentPos != gridPosition
                    && machineAtPos == null
-                   && (slot != null && slot.CanPutMachine());
+                   && (slot != null && slot.CanPutUnit());
         }
     }
 }

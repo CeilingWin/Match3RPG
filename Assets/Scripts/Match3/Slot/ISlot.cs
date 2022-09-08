@@ -8,7 +8,7 @@ namespace Unit
         public IStateSlot GetState();
 
         public bool CanSetItem();
-        public bool CanPutMachine();
+        public bool CanPutUnit();
         public IItem GetItem();
 
         public void SetItem(IItem item);

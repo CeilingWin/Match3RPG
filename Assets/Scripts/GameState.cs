@@ -2,16 +2,17 @@
 {
     public enum GamePhase
     {
-        GenerateMonster = 0,
-        PlayerMove = 1,
-        MachineAttack = 2,
-        MonsterAttack = 3,
-        Ended = 4
+        BeginNewWave = 0,
+        GenerateMonster = 1,
+        PlayerMove = 2,
+        MachineAttack = 3,
+        MonsterAttack = 4,
+        Ended = 5
     }
     public class GameState
     {
-        private int currentTurn;
         private int wave;
+        private int currentTurn;
         private GamePhase gamePhase;
         private int numberMoveRemain;
 
@@ -19,8 +20,8 @@
         {
             // todo: init by level
             currentTurn = 0;
-            wave = 1;
-            gamePhase = GamePhase.GenerateMonster;
+            wave = 0;
+            gamePhase = GamePhase.BeginNewWave;
             numberMoveRemain = 0;
         }
 
@@ -56,6 +57,17 @@
         public void IncreaseWave()
         {
             wave++;
+            currentTurn = 0;
+        }
+
+        public int GetCurrentTurn()
+        {
+            return currentTurn;
+        }
+
+        public void NextTurn()
+        {
+            currentTurn++;
         }
     }
 }

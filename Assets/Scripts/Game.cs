@@ -68,23 +68,24 @@ public class Game : MonoBehaviour
         // update game
         switch (gameState.GetCurrentPhase())
         {
+            case GamePhase.BeginNewWave:
+                OnNewWave();
+                break;
             case GamePhase.GenerateMonster:
-                currentTask = RpgModule.GenerateMonster(cancellationToken).ToAsyncLazy();
+                currentTask = RpgModule.GenerateMonster(gameState.GetCurrentTurn(), cancellationToken).ToAsyncLazy();
                 gameState.SetPhase(GamePhase.PlayerMove);
                 break;
             case GamePhase.PlayerMove:
                 if (gameState.GetNumberMoveRemain() <= 0)
                 {
                     gameState.SetPhase(GamePhase.MachineAttack);
-                    currentTask = RpgModule.LetMachinesAttack(cancellationToken).ToAsyncLazy();
                 }
                 break;
             case GamePhase.MachineAttack:
-                gameState.SetPhase(GamePhase.MonsterAttack);
-                currentTask = RpgModule.LetMonstersAttack(cancellationToken).ToAsyncLazy();
+                currentTask = LetMachinesAttack(cancellationToken).ToAsyncLazy();
                 break;
             case GamePhase.MonsterAttack:
-                CheckNextWave();
+                currentTask = LetMonstersAttack(cancellationToken).ToAsyncLazy();
                 break;
             case GamePhase.Ended:
                 // todo:
@@ -92,15 +93,37 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void CheckNextWave()
+    private async UniTask LetMachinesAttack(CancellationToken cancellationToken)
     {
+        await RpgModule.LetMachinesAttack(cancellationToken);
+        gameState.SetPhase(GamePhase.MonsterAttack);
+    }
+
+    private async UniTask LetMonstersAttack(CancellationToken cancellationToken)
+    {
+        await RpgModule.LetMonstersAttack(cancellationToken);
+        
+        if (RpgModule.IsGenAllMonster() && RpgModule.GetNumMonster() == 0)
+        {
+            gameState.SetPhase(GamePhase.BeginNewWave);
+        }
+        else
+        {
+            gameState.NextTurn();
+            gameState.SetPhase(GamePhase.GenerateMonster);
+        }
+    }
+
+    private void OnNewWave()
+    {
+        gameState.IncreaseWave();
         if (gameState.GetWave() > numWave)
         {
             gameState.SetPhase(GamePhase.Ended);
         }
         else
         {
-            gameState.IncreaseWave();
+            RpgModule.InitMonstersOfWave(gameState.GetWave());
             gameState.SetPhase(GamePhase.GenerateMonster);
         }
     }

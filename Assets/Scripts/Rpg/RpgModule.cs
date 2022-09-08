@@ -14,14 +14,16 @@ namespace Rpg
     {
         private readonly List<Machine> listMachines;
         private readonly List<Monster> listMonsters;
+        private readonly List<KeyValuePair<int, List<MonsterType>>> listMonsterToGenerate;
         private readonly YourBase yourBase;
-        private List<GameObject> listMoveArea;
+        private readonly List<GameObject> listMoveArea;
 
         public RpgModule()
         {
             listMachines = new List<Machine>();
             listMonsters = new List<Monster>();
             listMoveArea = new List<GameObject>();
+            listMonsterToGenerate = new List<KeyValuePair<int, List<MonsterType>>>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
             yourBase.SetMaxHp(100);
         }
@@ -60,17 +62,40 @@ namespace Rpg
 
         public bool CanSpawnMachine(GridPosition gridPosition, Enum.Material material)
         {
-            return material != Enum.Material.Biology && GetMachine(gridPosition) == null;
+            return material != Enum.Material.Biology && CanPutUnit(gridPosition);
         }
 
-        public async UniTask GenerateMonster(CancellationToken cancellationToken)
+        public bool CanPutUnit(GridPosition gridPosition)
+        {
+            return GetMachine(gridPosition) == null && GetMonster(gridPosition) == null;
+        }
+
+        public async UniTask GenerateMonster(int turn, CancellationToken cancellationToken)
         {
             var currentWave = Game.instance.GetState().GetWave();
             Debug.Log("GenerateMonster wave " + currentWave);
-            var type = (MonsterType) Random.Range(0, 2);
-            var pos = new GridPosition(Random.Range(5, 7), Random.Range(0, 8));
-            await SpawnMonster(pos, type);
-            await UniTask.CompletedTask;
+            var monstersToGen = listMonsterToGenerate.Find(data => data.Key == turn);
+            if (monstersToGen.Value == null) return;
+            var boardSize = Game.instance.Match3Module.GetBoardSize();
+            var listJobs = new List<UniTask>();
+            foreach (var monsterType in monstersToGen.Value)
+            {
+                int minRow = monsterType == MonsterType.Wasp ? boardSize.RowIndex - 4 : boardSize.RowIndex - 1;
+                int numLooped = 0;
+                const int maxLoop = 100;
+                while (numLooped < maxLoop)
+                {
+                    var gridPosition = new GridPosition(Random.Range(minRow, boardSize.RowIndex), Random.Range(0, boardSize.ColumnIndex));
+                    if (Game.instance.Match3Module.CanPutUnit(gridPosition) && CanPutUnit(gridPosition))
+                    {
+                        listJobs.Add(SpawnMonster(gridPosition, monsterType));
+                        break;
+                    }
+                    numLooped++;
+                }
+            }
+            listMonsterToGenerate.Remove(monstersToGen);
+            await UniTask.WhenAll(listJobs);
         }
 
         private async UniTask SpawnMonster(GridPosition gridPosition, MonsterType type)
@@ -138,6 +163,11 @@ namespace Rpg
             return listMachines.Find(unit => unit.GetGridPosition() == gridPosition);
         }
 
+        public Monster GetMonster(GridPosition gridPosition)
+        {
+            return listMonsters.Find(monster => monster.GetGridPosition() == gridPosition);
+        }
+
         public void ShowMoveAbleArea(Machine machine)
         {
             var boardSize = Game.instance.Match3Module.GetBoardSize();
@@ -169,6 +199,34 @@ namespace Rpg
         {
             listMoveArea.ForEach(Object.Destroy);
             listMoveArea.Clear();
+        }
+
+        public int GetNumMonster()
+        {
+            return listMonsters.Count;
+        }
+
+        public void InitMonstersOfWave(int wave)
+        {
+            // todo: load wave config
+            listMonsterToGenerate.Clear();
+            var numTurnGenMonster = Random.Range(1, 10);
+            for (var turn = 0; turn < numTurnGenMonster; turn++)
+            {
+                bool needGen = Random.Range(0, 3) > 0 ? true : false;
+                var numMonster = needGen ? Random.Range(1, 4) : 0;
+                List<MonsterType> listMonsterType = new List<MonsterType>();
+                for (var j = 0; j < numMonster; j++)
+                {
+                    listMonsterType.Add((MonsterType) Random.Range(0,3));
+                }
+                listMonsterToGenerate.Add(new KeyValuePair<int, List<MonsterType>>(turn, listMonsterType));
+            }
+        }
+
+        public bool IsGenAllMonster()
+        {
+            return listMonsterToGenerate.Count == 0;
         }
     }
 }

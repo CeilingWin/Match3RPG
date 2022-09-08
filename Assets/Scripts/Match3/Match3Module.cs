@@ -103,6 +103,13 @@ namespace Match3
             await SolveBoard(list, true,cancellationToken);
         }
 
+        public bool CanPutUnit(GridPosition pos)
+        {
+            if (!gameBoard.IsPointInBoard(pos)) return false;
+            var slot = gameBoard.GetSlot(pos);
+            return slot.CanPutUnit();
+        }
+
         private async UniTask SolveBoard(List<GridPosition> gridPositions, bool triggerBySwap, CancellationToken cancellationToken)
         {
             var solveData = solver.SolveBoard(gameBoard, gridPositions);
@@ -131,9 +138,8 @@ namespace Match3
             var rpgModule = Game.instance.RpgModule;
             foreach (var gridPosition in gridPositions)
             {
-                var slot = gameBoard.GetSlot(gridPosition);
                 var material = solveData.GetSequenceMaterial(gridPosition);
-                if (slot.CanPutMachine())
+                if (CanPutUnit(gridPosition))
                 {
                     if (!rpgModule.CanSpawnMachine(gridPosition, material)) continue;
                     listTask.Add(Game.instance.RpgModule.SpawnMachine(gridPosition, material, cancellationToken));

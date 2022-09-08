@@ -28,7 +28,7 @@ namespace Unit
             return GetState().CanContainItem() && item == null;
         }
 
-        public bool CanPutMachine()
+        public bool CanPutUnit()
         {
             return GetState().CanContainItem();
         }
