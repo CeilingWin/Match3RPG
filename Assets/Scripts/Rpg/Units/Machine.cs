@@ -9,7 +9,7 @@ namespace Rpg.Units
 {
     public abstract class Machine : Unit
     {
-        new void Start()
+        protected override void Start()
         {
             base.Start();
             this.AddComponent<Attack>();

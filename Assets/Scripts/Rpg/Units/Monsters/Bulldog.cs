@@ -6,7 +6,7 @@ namespace Rpg.Units.Monsters
 {
     public class Bulldog : Monster
     {
-        new void Start()
+        protected override void Start()
         {
             base.Start();
             GetComponent<Stat>().SetStat(6, 1, 1, 6, Int32.MaxValue);

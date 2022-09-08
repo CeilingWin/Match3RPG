@@ -12,13 +12,15 @@ namespace Rpg
 {
     public class RpgModule
     {
-        private readonly List<Machine> listUnits;
+        private readonly List<Machine> listMachines;
+        private readonly List<Monster> listMonsters;
         private readonly YourBase yourBase;
         private List<GameObject> listMoveArea;
 
         public RpgModule()
         {
-            listUnits = new List<Machine>();
+            listMachines = new List<Machine>();
+            listMonsters = new List<Monster>();
             listMoveArea = new List<GameObject>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
             yourBase.SetMaxHp(100);
@@ -50,7 +52,7 @@ namespace Rpg
             var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
             var machine = machineObject.GetComponent<Machine>();
             machine.SetGridPosition(gridPosition);
-            listUnits.Add(machine);
+            listMachines.Add(machine);
             Debug.Log("spawned new unit");
             // await UniTask.NextFrame(cancellationToken);
             // unit.GetComponent<Attack>().DoAttack();
@@ -65,7 +67,33 @@ namespace Rpg
         {
             var currentWave = Game.instance.GetState().GetWave();
             Debug.Log("GenerateMonster wave " + currentWave);
+            var type = (MonsterType) Random.Range(0, 2);
+            var pos = new GridPosition(Random.Range(5, 7), Random.Range(0, 8));
+            await SpawnMonster(pos, type);
+            await UniTask.CompletedTask;
+        }
 
+        private async UniTask SpawnMonster(GridPosition gridPosition, MonsterType type)
+        {
+            Debug.Log("spawn" + type);
+            string monsterName;
+            switch (type)
+            {
+                case MonsterType.Bulldog:
+                    monsterName = "Bulldog";
+                    break;
+                case MonsterType.Shark:
+                    monsterName = "Shark";
+                    break;
+                default:
+                    monsterName = "Wasp";
+                    break;
+            }
+
+            var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/Monsters/" + monsterName));
+            var monster = machineObject.GetComponent<Monster>();
+            monster.SetGridPosition(gridPosition);
+            listMonsters.Add(monster);
             await UniTask.CompletedTask;
         }
 
@@ -77,7 +105,7 @@ namespace Rpg
             // check count down
             List<Machine> listMachineDied = new List<Machine>();
             List<UniTask> jobs = new List<UniTask>();
-            listUnits.ForEach(machine =>
+            listMachines.ForEach(machine =>
             {
                 var stat = machine.GetComponent<Stat>();
                 stat.ChangeCountDown(-1);
@@ -89,7 +117,7 @@ namespace Rpg
             listMachineDied.ForEach(machine =>
             {
                 jobs.Add(machine.Die());
-                listUnits.Remove(machine);
+                listMachines.Remove(machine);
             });
             await UniTask.WhenAll(jobs);
         }
@@ -107,7 +135,7 @@ namespace Rpg
 
         public Machine GetMachine(GridPosition gridPosition)
         {
-            return listUnits.Find(unit => unit.GetGridPosition() == gridPosition);
+            return listMachines.Find(unit => unit.GetGridPosition() == gridPosition);
         }
 
         public void ShowMoveAbleArea(Machine machine)

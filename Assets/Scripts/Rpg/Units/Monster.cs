@@ -1,12 +1,14 @@
 ﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Rpg.Units
 {
     public abstract class Monster : Unit
     {
-        new void Start()
+        protected override void Start()
         {
             base.Start();
+            transform.rotation = Quaternion.LookRotation(Vector3.back);
         }
         
         public override UniTask Attack()

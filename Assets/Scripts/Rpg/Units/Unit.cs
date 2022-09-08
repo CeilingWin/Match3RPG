@@ -12,7 +12,7 @@ namespace Rpg.Units
     {
         private GridPosition gridPosition;
 
-        public void Start()
+        protected virtual void Start()
         {
             this.AddComponent<Stat>();
             this.AddComponent<Move>();
