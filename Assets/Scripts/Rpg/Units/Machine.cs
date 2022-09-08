@@ -20,6 +20,11 @@ namespace Rpg.Units
             throw new System.NotImplementedException();
         }
 
+        public override UniTask Die()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool CanMove()
         {
             return GetComponent<Stat>().GetSpeed() > 0;

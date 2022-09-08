@@ -70,7 +70,26 @@ namespace Rpg
         public async UniTask LetMachinesAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMachinesAttack");
-            await UniTask.CompletedTask;
+            // todo: attack
+            
+            // check count down
+            List<Machine> listMachineDied = new List<Machine>();
+            List<UniTask> jobs = new List<UniTask>();
+            listUnits.ForEach(machine =>
+            {
+                var stat = machine.GetComponent<Stat>();
+                stat.ChangeCountDown(-1);
+                if (stat.GetCountDown() == 0)
+                {
+                    listMachineDied.Add(machine);
+                }
+            });
+            listMachineDied.ForEach(machine =>
+            {
+                jobs.Add(machine.Die());
+                listUnits.Remove(machine);
+            });
+            await UniTask.WhenAll(jobs);
         }
 
         public async UniTask LetMonstersAttack(CancellationToken cancellationToken)
