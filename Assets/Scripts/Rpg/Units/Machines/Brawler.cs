@@ -1,4 +1,5 @@
 ﻿using Rpg.Ability;
+using Rpg.Ability.Detection;
 using Unity.VisualScripting;
 
 namespace Rpg.Units.Machines
@@ -8,7 +9,7 @@ namespace Rpg.Units.Machines
         protected override void Start()
         {
             base.Start();
-            this.AddComponent<SquareDetect>();
+            this.AddComponent<SquareDetection>();
             GetComponent<Stat>().SetStat(5, 1, 1, 2, 3);
         }
     }

@@ -2,9 +2,9 @@
 using Match3;
 using UnityEngine;
 
-namespace Rpg.Ability
+namespace Rpg.Ability.Detection
 {
-    public class SquareDetect : MonoBehaviour, IDetectAbility
+    public class SquareDetection : MonoBehaviour, IDetectAbility
     {
         private static readonly List<GridPosition> directions = new List<GridPosition>()
         {

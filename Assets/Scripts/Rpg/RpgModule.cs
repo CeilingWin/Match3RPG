@@ -169,7 +169,7 @@ namespace Rpg
         {
             return listMonsters.Find(monster => monster.GetGridPosition() == gridPosition);
         }
-
+ 
         public Units.Unit GetUnit<T>(GridPosition gridPosition) where T : Units.Unit
         {
             var machine = GetMachine(gridPosition);
@@ -177,15 +177,15 @@ namespace Rpg
             if (typeof(T) == typeof(Machine))
             {
                 return machine;
-            } else if (typeof(T) == typeof(Monster))
+            }
+
+            if (typeof(T) == typeof(Monster))
             {
                 return monster;
             }
-            else
-            {
-                if (machine) return machine;
-                return monster;
-            }
+
+            if (machine) return machine;
+            return monster;
         }
 
         public void ShowMoveAbleArea(Machine machine)

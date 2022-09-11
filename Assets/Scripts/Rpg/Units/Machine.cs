@@ -2,6 +2,7 @@
 using DefaultNamespace;
 using Match3;
 using Rpg.Ability;
+using Rpg.Ability.Detection;
 using Unity.VisualScripting;
 using UnityEngine;
 

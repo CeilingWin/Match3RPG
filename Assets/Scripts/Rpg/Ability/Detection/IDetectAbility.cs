@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Match3;
 
-namespace Rpg.Ability
+namespace Rpg.Ability.Detection
 {
     public interface IDetectAbility
     {
