@@ -125,6 +125,7 @@ namespace Rpg
         public async UniTask LetMachinesAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMachinesAttack");
+            listMachines.Sort();
             foreach (var machine in listMachines)
             {
                 await machine.Attack();

@@ -1,4 +1,5 @@
-﻿using Rpg.Ability;
+﻿using Enum;
+using Rpg.Ability;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
 
@@ -9,6 +10,7 @@ namespace Rpg.Units.Machines
         protected override void Start()
         {
             base.Start();
+            material = Material.Chemistry;
             var detection = this.AddComponent<RangeDetection>();
             detection.SetRange(3);
             GetComponent<Stat>().SetStat(3, 1, 2, 1, 5);

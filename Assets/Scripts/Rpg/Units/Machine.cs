@@ -1,15 +1,21 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using Utils;
+using Material = Enum.Material;
 
 namespace Rpg.Units
 {
-    public abstract class Machine : Unit
+    public abstract class Machine : Unit, IComparable<Machine>
     {
+        protected Material material;
         protected override void Start()
         {
             base.Start();
@@ -20,9 +26,9 @@ namespace Rpg.Units
         {
             var monsters = GetComponent<IDetectAbility>().DetectAllUnits<Monster>();
             if (monsters.Count == 0) return;
+            var monsterOrder = new MonsterOrder(GetGridPosition());
+            monsters.Sort(monsterOrder);
             var target = monsters[0];
-            if (!target) return;
-            Debug.Log("attack " + target);
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
             await GetComponent<Attack>().DoAttack();
             transform.rotation = Quaternion.LookRotation(Vector3.forward);
@@ -48,6 +54,18 @@ namespace Rpg.Units
                    && currentPos != gridPosition
                    && unit == null
                    && (slot != null && slot.CanPutUnit());
+        }
+
+        public Material GetMaterial()
+        {
+            return material;
+        }
+
+        public int CompareTo(Machine other)
+        {
+            var xIndex = ArrayUtility.IndexOf(CompareUtils.Materials, this.GetMaterial());
+            var yIndex = ArrayUtility.IndexOf(CompareUtils.Materials, other.GetMaterial());
+            return xIndex - yIndex;
         }
     }
 }
