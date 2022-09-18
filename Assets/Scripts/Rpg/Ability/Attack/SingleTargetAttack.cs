@@ -1,11 +1,9 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Rpg.Ability.Detection;
-using Rpg.Units;
 using UnityEngine;
-using Utils;
 
-namespace Rpg.Ability
+namespace Rpg.Ability.Attack
 {
     public class SingleTargetAttack : BaseAttack, IAttack
     {

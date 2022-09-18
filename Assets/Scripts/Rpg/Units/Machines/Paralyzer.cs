@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Enum;
 using Rpg.Ability;
+using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
 using Rpg.Effects;
 using Unity.VisualScripting;

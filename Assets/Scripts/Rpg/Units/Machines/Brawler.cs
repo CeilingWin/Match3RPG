@@ -1,5 +1,6 @@
 ﻿using Enum;
 using Rpg.Ability;
+using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
 
