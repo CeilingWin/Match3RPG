@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Rpg.Ability;
 using UnityEngine;
 
 namespace Rpg.Units
@@ -19,6 +20,11 @@ namespace Rpg.Units
         public override UniTask Die()
         {
             throw new System.NotImplementedException();
+        }
+
+        public override bool IsDied()
+        {
+            return GetComponent<Stat>().GetHp() > 0;
         }
     }
 }

@@ -4,7 +4,6 @@ using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using Utils;
 using Material = Enum.Material;
@@ -32,9 +31,11 @@ namespace Rpg.Units
             transform.rotation = Quaternion.LookRotation(Vector3.forward);
         }
 
-        public override UniTask Die()
+        public override async UniTask Die()
         {
-            throw new System.NotImplementedException();
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+            Destroy(gameObject);
+            await UniTask.CompletedTask;
         }
 
         public bool CanMove()
@@ -64,6 +65,12 @@ namespace Rpg.Units
             var xIndex = Array.IndexOf(CompareUtils.Materials, this.GetMaterial());
             var yIndex = Array.IndexOf(CompareUtils.Materials, other.GetMaterial());
             return xIndex - yIndex;
+        }
+
+        public override bool IsDied()
+        {
+            var stat = GetComponent<Stat>();
+            return stat.GetHp() > 0 && stat.GetCountDown() > 0;
         }
     }
 }

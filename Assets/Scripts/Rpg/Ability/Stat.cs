@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using Rpg.Units.Common;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Rpg.Ability
@@ -18,7 +19,8 @@ namespace Rpg.Ability
             this.numTurnToAttack = numTurnToAttack;
             this.damage = damage;
             this.countDown = countDown;
-            GetComponent<Units.Unit>().SetMaxHealth(hp);
+            GetComponentInChildren<HealthBar>().SetMaxHealth(hp);
+            GetComponentInChildren<HealthBarMachine>()?.SetCountDown(countDown);
         }
 
         public int GetHp()
@@ -30,6 +32,7 @@ namespace Rpg.Ability
         {
             this.hp += hp;
             if (this.hp < 0) this.hp = 0;
+            GetComponentInChildren<HealthBar>().SetHealth(this.hp);
         }
 
         public int GetSpeed()
@@ -55,8 +58,9 @@ namespace Rpg.Ability
 
         public void ChangeCountDown(int amount)
         {
-            countDown -= amount;
+            countDown += amount;
             if (countDown < 0) countDown = 0;
+            GetComponentInChildren<HealthBarMachine>()?.SetCountDown(countDown);
         }
     }
 }

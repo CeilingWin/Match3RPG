@@ -4,14 +4,11 @@ using Match3;
 using Rpg.Ability;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Rpg.Units
 {
     public abstract class Unit : MonoBehaviour
-    {        
-        [SerializeField]
-        protected HealthBar healthBar;
+    {
         private GridPosition gridPosition;
 
         protected virtual void Start()
@@ -19,6 +16,8 @@ namespace Rpg.Units
             this.AddComponent<Stat>();
             this.AddComponent<Move>();
         }
+
+        public abstract bool IsDied();
 
         public void SetPosition(Vector3 position)
         {
@@ -39,15 +38,5 @@ namespace Rpg.Units
         public abstract UniTask Attack();
 
         public abstract UniTask Die();
-
-        public void SetMaxHealth(int health)
-        {
-            healthBar.SetMaxHealth(health);
-        }
-
-        public void SetHealth(int health)
-        {
-            healthBar.SetHealth(health);  
-        }
     }
 }
