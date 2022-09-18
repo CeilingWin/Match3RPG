@@ -160,8 +160,8 @@ public class Game : MonoBehaviour
             {
                 var unit = RpgModule.GetMachine(gridPosition);
                 if (!unit) return;
+                if (!unit.CanMove()) return;
                 selectedUnit = unit;
-                if (!selectedUnit.CanMove()) return;
                 RpgModule.ShowMoveAbleArea(selectedUnit);
             }
             else
