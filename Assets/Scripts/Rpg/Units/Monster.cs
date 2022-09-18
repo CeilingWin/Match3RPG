@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Rpg.Ability;
 using UnityEngine;
 using Utils;
@@ -9,6 +10,7 @@ namespace Rpg.Units
     {
         protected override void Start()
         {
+            defaultDirection = Vector3.back;
             base.Start();
             transform.rotation = Quaternion.LookRotation(Vector3.back);
         }
@@ -44,6 +46,10 @@ namespace Rpg.Units
                 var animator = GetComponent<Animator>();
                 await AnimatorUtils.PlayAnimationSync(animator, "GetHit", "Idle");
             }
+        }
+
+        public override void SortUnits(List<Unit> units)
+        {
         }
     }
 }

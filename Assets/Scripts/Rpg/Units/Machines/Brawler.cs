@@ -13,6 +13,7 @@ namespace Rpg.Units.Machines
             material = Material.Machinery;
             this.AddComponent<SquareDetection>();
             GetComponent<Stat>().SetStat(5, 1, 1, 2, 3);
+            this.AddComponent<SingleTargetAttack>();
         }
     }
 }

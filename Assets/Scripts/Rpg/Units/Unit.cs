@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Match3;
 using Rpg.Ability;
@@ -9,6 +10,7 @@ namespace Rpg.Units
 {
     public abstract class Unit : MonoBehaviour
     {
+        public Vector3 defaultDirection;
         private GridPosition gridPosition;
 
         protected virtual void Start()
@@ -40,5 +42,7 @@ namespace Rpg.Units
         public abstract UniTask Die();
         
         public abstract UniTask TakeDamage(int damage);
+
+        public abstract void SortUnits(List<Unit> units);
     }
 }

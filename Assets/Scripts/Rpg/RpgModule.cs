@@ -125,11 +125,6 @@ namespace Rpg
         public async UniTask LetMachinesAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMachinesAttack");
-            listMachines.Sort();
-            foreach (var machine in listMachines)
-            {
-                await machine.Attack();
-            }
             // check count down
             List<Machine> listMachineDied = new List<Machine>();
             List<UniTask> jobs = new List<UniTask>();
@@ -142,6 +137,13 @@ namespace Rpg
                     listMachineDied.Add(machine);
                 }
             });
+            
+            listMachines.Sort();
+            foreach (var machine in listMachines)
+            {
+                await machine.Attack();
+            }
+
             listMachineDied.ForEach(machine =>
             {
                 jobs.Add(machine.Die());

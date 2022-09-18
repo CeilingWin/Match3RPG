@@ -14,6 +14,7 @@ namespace Rpg.Units.Machines
             var detection = this.AddComponent<RangeDetection>();
             detection.SetRange(3);
             GetComponent<Stat>().SetStat(3, 1, 2, 1, 5);
+            this.AddComponent<SingleTargetAttack>();
         }
     }
 }

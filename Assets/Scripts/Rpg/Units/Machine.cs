@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Match3;
 using Rpg.Ability;
@@ -15,23 +16,19 @@ namespace Rpg.Units
         protected Material material;
         protected override void Start()
         {
+            defaultDirection = Vector3.forward;
             base.Start();
-            this.AddComponent<Attack>();
         }
 
         public override async UniTask Attack()
         {
-            var monsters = GetComponent<IDetectAbility>().DetectAllUnits<Monster>();
-            if (monsters.Count == 0) return;
+            await GetComponent<IAttack>().Attack<Monster>();
+        }
+        
+        public override void SortUnits(List<Unit> units)
+        {
             var monsterOrder = new MonsterOrder(GetGridPosition());
-            monsters.Sort(monsterOrder);
-            var target = monsters[0];
-            transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            var taskAttack = GetComponent<Attack>().DoAttack();
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
-            target.TakeDamage(GetComponent<Stat>().GetDamage());
-            await taskAttack;
-            transform.rotation = Quaternion.LookRotation(Vector3.forward);
+            units.Sort(monsterOrder);
         }
 
         public override async UniTask Die()
