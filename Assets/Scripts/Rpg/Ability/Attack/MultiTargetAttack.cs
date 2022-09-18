@@ -17,7 +17,7 @@ namespace Rpg.Ability.Attack
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
             foreach (var unit in units)
             {
-                unit.TakeDamage(GetComponent<Stat>().GetDamage());
+                PerformAttackToTarget(unit);
             }
             await taskAttack;
             transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);

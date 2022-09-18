@@ -40,10 +40,15 @@ namespace Rpg.Ability
             return speed;
         }
 
-        public void ChangeSpeed(int speed)
+        public void IncreaseSpeed(int speed)
         {
             this.speed += speed;
             if (this.speed < 1) this.speed = 1;
+        }
+
+        public void SetSpeed(int speed)
+        {
+            this.speed = speed;
         }
 
         public int GetDamage()

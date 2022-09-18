@@ -102,6 +102,7 @@ public class Game : MonoBehaviour
     private async UniTask LetMonstersAttack(CancellationToken cancellationToken)
     {
         await RpgModule.LetMonstersAttack(cancellationToken);
+        await RpgModule.UpdateAllUnits();
         
         if (RpgModule.IsGenAllMonster() && RpgModule.GetNumMonster() == 0)
         {

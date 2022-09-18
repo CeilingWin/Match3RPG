@@ -19,7 +19,7 @@ namespace Rpg.Ability
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var taskAttack = DoAttack();
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
-            target.TakeDamage(GetComponent<Stat>().GetDamage());
+            PerformAttackToTarget(target);
             await taskAttack;
             transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);
         }

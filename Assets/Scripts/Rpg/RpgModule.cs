@@ -261,5 +261,16 @@ namespace Rpg
         {
             return listMonsterToGenerate.Count == 0;
         }
+
+        /*
+         * update unit effect
+         */
+        public async UniTask UpdateAllUnits()
+        {
+            List<UniTask> jobs = new List<UniTask>();
+            listMachines.ForEach(machine => jobs.Add(machine.UpdateUnit()));
+            listMonsters.ForEach(monster => jobs.Add(monster.UpdateUnit()));
+            await UniTask.WhenAll(jobs);
+        }
     }
 }
