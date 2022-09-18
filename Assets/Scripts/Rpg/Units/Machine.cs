@@ -27,7 +27,10 @@ namespace Rpg.Units
             monsters.Sort(monsterOrder);
             var target = monsters[0];
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            await GetComponent<Attack>().DoAttack();
+            var taskAttack = GetComponent<Attack>().DoAttack();
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+            target.TakeDamage(GetComponent<Stat>().GetDamage());
+            await taskAttack;
             transform.rotation = Quaternion.LookRotation(Vector3.forward);
         }
 
@@ -35,7 +38,6 @@ namespace Rpg.Units
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
             Destroy(gameObject);
-            await UniTask.CompletedTask;
         }
 
         public bool CanMove()
@@ -71,6 +73,11 @@ namespace Rpg.Units
         {
             var stat = GetComponent<Stat>();
             return stat.GetHp() > 0 && stat.GetCountDown() > 0;
+        }
+        
+        public override async UniTask TakeDamage(int damage)
+        {
+            await UniTask.CompletedTask;
         }
     }
 }

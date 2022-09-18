@@ -189,6 +189,16 @@ namespace Rpg
             return monster;
         }
 
+        public void OnMonsterDied(Monster monster)
+        {
+            listMonsters.Remove(monster);
+        }
+
+        public void OnMachineDied(Machine machine)
+        {
+            listMachines.Remove(machine);
+        }
+
         public void ShowMoveAbleArea(Machine machine)
         {
             var boardSize = Game.instance.Match3Module.GetBoardSize();

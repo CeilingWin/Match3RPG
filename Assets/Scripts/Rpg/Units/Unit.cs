@@ -38,5 +38,7 @@ namespace Rpg.Units
         public abstract UniTask Attack();
 
         public abstract UniTask Die();
+        
+        public abstract UniTask TakeDamage(int damage);
     }
 }
