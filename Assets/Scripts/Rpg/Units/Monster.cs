@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Match3;
 using Rpg.Ability;
 using UnityEngine;
 using Utils;
@@ -15,9 +17,47 @@ namespace Rpg.Units
             transform.rotation = Quaternion.LookRotation(Vector3.back);
         }
 
-        public override UniTask Attack()
+        public override async UniTask Attack()
         {
-            throw new System.NotImplementedException();
+            var stat = GetComponent<Stat>();
+            var currentPosition = GetGridPosition();
+            if (currentPosition.RowIndex == 0)
+            {
+                await GetComponent<BaseAttack>().DoAttack();
+                Game.instance.RpgModule.GetYourBase().TakeDamage(stat.GetDamage());
+            }
+            else
+            {
+                var forwardPosition = currentPosition + GridPosition.Down;
+                var target = Game.instance.RpgModule.GetMachine(forwardPosition);
+                if (target)
+                {
+                    var attackJob = GetComponent<BaseAttack>().DoAttack();
+                    await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+                    await target.TakeDamage(stat.GetDamage());
+                    await attackJob;
+                }
+                else
+                {
+                    List<GridPosition> directions = new List<GridPosition>()
+                    {
+                        GridPosition.Down,
+                        GridPosition.Left,
+                        GridPosition.Right
+                    };
+                    foreach (var direction in directions)
+                    {
+                        var pos = currentPosition + direction;
+                        if (Game.instance.Match3Module.CanPutUnit(pos)
+                            && Game.instance.RpgModule.CanPutUnit(pos))
+                        {
+                            await GetComponent<Move>().MoveTo(pos);
+                            break;
+                        }
+                    }
+                    await GetComponent<IAttack>().Attack<Machine>();
+                }
+            }
         }
 
         public override async UniTask Die()
@@ -50,6 +90,8 @@ namespace Rpg.Units
 
         public override void SortUnits(List<Unit> units)
         {
+            var machineOrder = new MachineOrder(GetGridPosition());
+            units.Sort(machineOrder);
         }
     }
 }

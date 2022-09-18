@@ -10,6 +10,7 @@ namespace Rpg.Units.Machines
     {
         protected override void Start()
         {
+            delayAttack = 0.5f;
             base.Start();
             material = Material.Machinery;
             this.AddComponent<SquareDetection>();

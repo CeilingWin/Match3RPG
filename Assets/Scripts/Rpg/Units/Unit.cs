@@ -13,6 +13,7 @@ namespace Rpg.Units
     public abstract class Unit : MonoBehaviour
     {
         public Vector3 defaultDirection;
+        public float delayAttack;
         private GridPosition gridPosition;
         private List<Effect> effects;
 

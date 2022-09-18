@@ -16,7 +16,7 @@ namespace Rpg.Ability.Attack
             var target = units[0];
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var taskAttack = DoAttack();
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+            await UniTask.Delay(TimeSpan.FromSeconds(thisUnit.delayAttack));
             PerformAttackToTarget(target);
             await taskAttack;
             transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);

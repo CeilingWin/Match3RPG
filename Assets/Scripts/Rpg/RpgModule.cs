@@ -155,7 +155,10 @@ namespace Rpg
         public async UniTask LetMonstersAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMonstersAttack");
-            await UniTask.CompletedTask;
+            foreach (var monster in listMonsters)
+            {
+                await monster.Attack();
+            }
         }
 
         public YourBase GetYourBase()

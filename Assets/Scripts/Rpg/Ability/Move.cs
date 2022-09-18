@@ -31,7 +31,7 @@ namespace Rpg.Ability
             var moveJob = transform.DOMove(desPosition, timeMove).SetEase(Ease.Linear).WithCancellation(this.GetCancellationTokenOnDestroy());
             await UniTask.WhenAll(moveJob, rotationJob);
             animator.Play(idleAction);
-            var rotateBackJob = DoActionRotateTo(desPosition - position, Vector3.forward);
+            var rotateBackJob = DoActionRotateTo(desPosition - position, GetComponent<Units.Unit>().defaultDirection);
             await rotateBackJob;
             GetComponent<Units.Unit>()?.SetGridPosition(gridPosition);
         }

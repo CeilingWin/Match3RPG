@@ -24,5 +24,10 @@ namespace Rpg.Ability.Detection
             }
             return units;
         }
+
+        public int GetRange()
+        {
+            return 1;
+        }
     }
 }

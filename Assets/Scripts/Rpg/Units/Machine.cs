@@ -74,7 +74,17 @@ namespace Rpg.Units
         
         public override async UniTask TakeDamage(int damage)
         {
-            await UniTask.CompletedTask;
+            var stat = GetComponent<Stat>();
+            stat.ChangeHp(-damage);
+            if (stat.GetHp() == 0)
+            {
+                Game.instance.RpgModule.OnMachineDied(this);
+                await Die();
+            }
+            else
+            {
+                
+            }
         }
     }
 }

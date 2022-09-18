@@ -14,6 +14,7 @@ namespace Rpg.Units.Machines
         private int countDownToAttack;
         protected override void Start()
         {
+            delayAttack = 0.5f;
             base.Start();
             material = Material.Chemistry;
             var detection = this.AddComponent<RangeDetection>();

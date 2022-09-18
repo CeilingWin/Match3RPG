@@ -13,6 +13,7 @@ namespace Rpg.Units.Machines
     {
         protected override void Start()
         {
+            delayAttack = 0.5f;
             base.Start();
             material = Material.Energy;
             var detection = this.AddComponent<RangeDetection>();

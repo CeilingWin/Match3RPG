@@ -14,7 +14,7 @@ namespace Rpg.Ability.Attack
             var thisUnit = GetComponent<Units.Unit>();
             thisUnit.SortUnits(units);
             var taskAttack = DoAttack();
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+            await UniTask.Delay(TimeSpan.FromSeconds(thisUnit.delayAttack));
             foreach (var unit in units)
             {
                 PerformAttackToTarget(unit);
