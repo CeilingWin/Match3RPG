@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using core;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -28,8 +26,10 @@ public class Item : MonoBehaviour, IItem
     public void SetMaterial(Material material1)
     {
         material = material1;
-        var texture = (Texture) Resources.Load("Textures/Items/tile_" + (int)material1);
-        GetComponent<MeshRenderer>().material.mainTexture = texture;
+        // var texture = (Texture) Resources.Load("Textures/Items/tile_" + (int)material1);
+        var m = (UnityEngine.Material) Resources.Load("Materials/Items/" + (int)material1);
+        GetComponent<MeshRenderer>().material = m;
+        // GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
 
     public Material GetMaterial()

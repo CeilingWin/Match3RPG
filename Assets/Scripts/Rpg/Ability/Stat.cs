@@ -18,6 +18,7 @@ namespace Rpg.Ability
             this.numTurnToAttack = numTurnToAttack;
             this.damage = damage;
             this.countDown = countDown;
+            GetComponent<Units.Unit>().SetMaxHealth(hp);
         }
 
         public int GetHp()

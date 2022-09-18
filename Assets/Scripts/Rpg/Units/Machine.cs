@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
-using DefaultNamespace;
 using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Detection;
@@ -63,8 +61,8 @@ namespace Rpg.Units
 
         public int CompareTo(Machine other)
         {
-            var xIndex = ArrayUtility.IndexOf(CompareUtils.Materials, this.GetMaterial());
-            var yIndex = ArrayUtility.IndexOf(CompareUtils.Materials, other.GetMaterial());
+            var xIndex = Array.IndexOf(CompareUtils.Materials, this.GetMaterial());
+            var yIndex = Array.IndexOf(CompareUtils.Materials, other.GetMaterial());
             return xIndex - yIndex;
         }
     }

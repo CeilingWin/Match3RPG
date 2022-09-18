@@ -9,7 +9,9 @@ using UnityEngine.Serialization;
 namespace Rpg.Units
 {
     public abstract class Unit : MonoBehaviour
-    {
+    {        
+        [SerializeField]
+        protected HealthBar healthBar;
         private GridPosition gridPosition;
 
         protected virtual void Start()
@@ -37,5 +39,15 @@ namespace Rpg.Units
         public abstract UniTask Attack();
 
         public abstract UniTask Die();
+
+        public void SetMaxHealth(int health)
+        {
+            healthBar.SetMaxHealth(health);
+        }
+
+        public void SetHealth(int health)
+        {
+            healthBar.SetHealth(health);  
+        }
     }
 }

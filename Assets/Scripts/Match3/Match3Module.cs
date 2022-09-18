@@ -25,7 +25,7 @@ namespace Match3
         {
             // todo: load config
             this.itemPrefab = itemPrefab;
-            this.itemSize = 1.01f;
+            this.itemSize = 1.02f;
             gameBoard = new Match3Board(8, 8);
             fillStrategy = new FadeInStrategy(this);
             solver = new SequenceSolver();
