@@ -8,6 +8,7 @@ using Match3.Solver;
 using Unit;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Material = Enum.Material;
 
 namespace Match3
 {
@@ -84,8 +85,8 @@ namespace Match3
         public async UniTask Swap(GridPosition startPos, GridPosition endPos, CancellationToken cancellationToken)
         {
             if (!gameBoard.IsPointInBoard(startPos) || !gameBoard.IsPointInBoard(endPos)) return;
-            var slot1 = gameBoard.Slots[startPos.RowIndex, startPos.ColumnIndex];
-            var slot2 = gameBoard.Slots[endPos.RowIndex, endPos.ColumnIndex];
+            var slot1 = gameBoard.GetSlot(startPos);
+            var slot2 = gameBoard.GetSlot(endPos);
             Debug.Log("swap" + startPos + " to " + endPos);
             if (!slot1.GetState().CanContainItem() || !slot2.GetState().CanContainItem())
             {
@@ -101,6 +102,23 @@ namespace Match3
             await DoAnimateSwap(slot1, slot2, cancellationToken);
             var list = new List<GridPosition>() {endPos, startPos};
             await SolveBoard(list, true,cancellationToken);
+        }
+
+        public async UniTask RespawnItem(GridPosition gridPosition, Material material, CancellationToken cancellationToken)
+        {
+            if (!gameBoard.IsPointInBoard(gridPosition)) return;
+            var slot = gameBoard.GetSlot(gridPosition);
+            var itemToHide = slot.GetItem();
+            var newItem = ItemPool.GetIns().GetItem();
+            newItem.SetMaterial(material);
+            newItem.SetPosition(itemToHide.GetPosition());
+            slot.SetItem(newItem);
+            await itemToHide.Transform.DOScale(Vector3.zero, 0.25f).OnComplete(() =>
+            {
+                ItemPool.GetIns().ReleaseItem(itemToHide);
+            });
+            await newItem.Appear();
+            await SolveBoard(new List<GridPosition>() {gridPosition}, false, cancellationToken);
         }
 
         public bool CanPutUnit(GridPosition pos)

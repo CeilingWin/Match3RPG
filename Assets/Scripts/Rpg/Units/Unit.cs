@@ -42,7 +42,7 @@ namespace Rpg.Units
             return gridPosition;
         }
 
-        public UniTask UpdateUnit()
+        public virtual UniTask UpdateUnit()
         {
             effects.ForEach(effect => effect.Update());
             effects = effects.Where(effect => effect.isActive).ToList();

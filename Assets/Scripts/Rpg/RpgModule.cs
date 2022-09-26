@@ -85,15 +85,18 @@ namespace Rpg
                 const int maxLoop = 100;
                 while (numLooped < maxLoop)
                 {
-                    var gridPosition = new GridPosition(Random.Range(minRow, boardSize.RowIndex), Random.Range(0, boardSize.ColumnIndex));
+                    var gridPosition = new GridPosition(Random.Range(minRow, boardSize.RowIndex),
+                        Random.Range(0, boardSize.ColumnIndex));
                     if (Game.instance.Match3Module.CanPutUnit(gridPosition) && CanPutUnit(gridPosition))
                     {
                         listJobs.Add(SpawnMonster(gridPosition, monsterType));
                         break;
                     }
+
                     numLooped++;
                 }
             }
+
             listMonsterToGenerate.Remove(monstersToGen);
             await UniTask.WhenAll(listJobs);
         }
@@ -126,39 +129,41 @@ namespace Rpg
         {
             Debug.Log("LetMachinesAttack");
             // check count down
-            List<Machine> listMachineDied = new List<Machine>();
             List<UniTask> jobs = new List<UniTask>();
-            listMachines.ForEach(machine =>
-            {
-                var stat = machine.GetComponent<Stat>();
-                stat.ChangeCountDown(-1);
-                if (stat.GetCountDown() == 0)
-                {
-                    listMachineDied.Add(machine);
-                }
-            });
-            
+
             listMachines.Sort();
-            foreach (var machine in listMachines)
+            var machines = listMachines.ToArray();
+            foreach (var machine in machines)
             {
                 await machine.Attack();
             }
 
-            listMachineDied.ForEach(machine =>
+            // update after attack
+            foreach (var machine in machines)
             {
-                jobs.Add(machine.Die());
-                listMachines.Remove(machine);
-            });
+                jobs.Add(machine.UpdateUnit());
+            }
+
             await UniTask.WhenAll(jobs);
         }
 
         public async UniTask LetMonstersAttack(CancellationToken cancellationToken)
         {
             Debug.Log("LetMonstersAttack");
-            foreach (var monster in listMonsters)
+            List<UniTask> jobs = new List<UniTask>();
+            var monsters = listMonsters.ToArray();
+            foreach (var monster in monsters)
             {
                 await monster.Attack();
             }
+
+            // update after attack
+            foreach (var monster in monsters)
+            {
+                jobs.Add(monster.UpdateUnit());
+            }
+
+            await UniTask.WhenAll(jobs);
         }
 
         public YourBase GetYourBase()
@@ -175,7 +180,7 @@ namespace Rpg
         {
             return listMonsters.Find(monster => monster.GetGridPosition() == gridPosition);
         }
- 
+
         public Units.Unit GetUnit<T>(GridPosition gridPosition) where T : Units.Unit
         {
             var machine = GetMachine(gridPosition);
@@ -222,6 +227,7 @@ namespace Rpg
                     {
                         material = Resources.Load<Material>("Materials/CantMoveArea");
                     }
+
                     tile.GetComponent<MeshRenderer>().sharedMaterial = material;
                     var worldPosition = Game.instance.Match3Module.IndexToWorldPosition(position);
                     worldPosition.y = 0.02f;
@@ -254,8 +260,9 @@ namespace Rpg
                 List<MonsterType> listMonsterType = new List<MonsterType>();
                 for (var j = 0; j < numMonster; j++)
                 {
-                    listMonsterType.Add((MonsterType) Random.Range(0,3));
+                    listMonsterType.Add((MonsterType) Random.Range(0, 3));
                 }
+
                 listMonsterToGenerate.Add(new KeyValuePair<int, List<MonsterType>>(turn, listMonsterType));
             }
         }
@@ -268,12 +275,24 @@ namespace Rpg
         /*
          * update unit effect
          */
-        public async UniTask UpdateAllUnits()
+        public UniTask UpdateAllUnits()
         {
-            List<UniTask> jobs = new List<UniTask>();
-            listMachines.ForEach(machine => jobs.Add(machine.UpdateUnit()));
-            listMonsters.ForEach(monster => jobs.Add(monster.UpdateUnit()));
-            await UniTask.WhenAll(jobs);
+            foreach (var machine in listMachines.ToArray())
+            {
+                if (machine.IsDied())
+                {
+                    Object.Destroy(machine);
+                }
+            }
+
+            foreach (var monster in listMonsters.ToArray())
+            {
+                if (monster.IsDied())
+                {
+                    Object.Destroy(monster);
+                }
+            }
+            return UniTask.CompletedTask;
         }
     }
 }

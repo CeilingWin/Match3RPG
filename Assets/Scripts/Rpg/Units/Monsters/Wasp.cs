@@ -14,7 +14,7 @@ namespace Rpg.Units.Monsters
             base.Start();
             GetComponent<Stat>().SetStat(3, 2, 1, 3, Int32.MaxValue);
             this.AddComponent<SingleTargetAttack>();
-            this.AddComponent<RangeDetection>().SetRange(4);
+            this.AddComponent<SquareDetection>();
         }
     }
 }

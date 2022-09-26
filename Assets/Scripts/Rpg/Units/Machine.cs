@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Detection;
@@ -33,8 +34,9 @@ namespace Rpg.Units
 
         public override async UniTask Die()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
-            Destroy(gameObject);
+            Game.instance.RpgModule.OnMachineDied(this);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1));
+            await transform.DOScale(Vector3.zero, 0.6f).WithCancellation(this.GetCancellationTokenOnDestroy());
         }
 
         public bool CanMove()
@@ -69,7 +71,7 @@ namespace Rpg.Units
         public override bool IsDied()
         {
             var stat = GetComponent<Stat>();
-            return stat.GetHp() > 0 && stat.GetCountDown() > 0;
+            return stat.GetHp() <= 0 || stat.GetCountDown() <= 0;
         }
         
         public override async UniTask TakeDamage(int damage)
@@ -78,12 +80,22 @@ namespace Rpg.Units
             stat.ChangeHp(-damage);
             if (stat.GetHp() == 0)
             {
-                Game.instance.RpgModule.OnMachineDied(this);
                 await Die();
             }
             else
             {
                 
+            }
+        }
+
+        public override async UniTask UpdateUnit()
+        {
+            base.UpdateUnit();
+            var stat = GetComponent<Stat>();
+            stat.ChangeCountDown(-1);
+            if (stat.GetCountDown() == 0)
+            {
+                await Die();
             }
         }
     }

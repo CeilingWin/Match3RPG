@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Enum;
 using Rpg.Ability;
@@ -16,8 +17,7 @@ namespace Rpg.Units.Machines
             delayAttack = 0.5f;
             base.Start();
             material = Material.Energy;
-            var detection = this.AddComponent<RangeDetection>();
-            detection.SetRange(3);
+            this.AddComponent<RangeDetection>().SetRange(3);
             GetComponent<Stat>().SetStat(1, 0, Int32.MaxValue, 2, 2);
             this.AddComponent<MultiTargetAttack>();
         }
@@ -27,6 +27,16 @@ namespace Rpg.Units.Machines
             if (GetComponent<Stat>().GetCountDown() == 0)
             {
                 await GetComponent<IAttack>().Attack<Monster>();
+            }
+        }
+
+        public override async UniTask Die()
+        {
+            await base.Die();
+            await base.Attack();
+            if (GetComponent<Stat>().GetCountDown() == 0)
+            {
+                await Game.instance.Match3Module.RespawnItem(GetGridPosition(), Material.Energy, CancellationToken.None);
             }
         }
     }

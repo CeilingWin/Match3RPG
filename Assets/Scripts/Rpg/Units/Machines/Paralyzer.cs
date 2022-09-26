@@ -21,7 +21,7 @@ namespace Rpg.Units.Machines
             detection.SetRange(3);
             GetComponent<Stat>().SetStat(3, 1, 2, 1, 5);
             this.AddComponent<SingleTargetAttack>().SetEffect(new ChangeSpeedEffect(-2, Int32.MaxValue));
-            countDownToAttack = 2;
+            countDownToAttack = 0;
         }
 
         public override async UniTask Attack()

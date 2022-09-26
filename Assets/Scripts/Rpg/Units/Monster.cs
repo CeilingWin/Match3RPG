@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Match3;
 using Rpg.Ability;
 using UnityEngine;
@@ -62,14 +63,15 @@ namespace Rpg.Units
 
         public override async UniTask Die()
         {
+            Game.instance.RpgModule.OnMonsterDied(this);
             var animator = GetComponent<Animator>();
             await AnimatorUtils.PlayAnimationSync(animator, "Die", "Idle");
-            Destroy(gameObject);
+            await transform.DOScale(Vector3.zero, 0.2f).WithCancellation(this.GetCancellationTokenOnDestroy());
         }
 
         public override bool IsDied()
         {
-            return GetComponent<Stat>().GetHp() > 0;
+            return GetComponent<Stat>().GetHp() <= 0;
         }
 
         public override async UniTask TakeDamage(int damage)
@@ -78,7 +80,6 @@ namespace Rpg.Units
             stat.ChangeHp(-damage);
             if (stat.GetHp() == 0)
             {
-                Game.instance.RpgModule.OnMonsterDied(this);
                 await Die();
             }
             else
