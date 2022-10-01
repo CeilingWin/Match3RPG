@@ -30,21 +30,43 @@ namespace Match3
         {
             return new GridPosition(gr1.RowIndex - gr2.RowIndex, gr1.ColumnIndex - gr2.ColumnIndex);
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            try
+            {
+                GridPosition gr = (GridPosition) obj;
+                return ColumnIndex == gr.ColumnIndex && RowIndex == gr.RowIndex;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public static bool operator ==(GridPosition gr1, GridPosition gr2)
         {
-            return gr1.ColumnIndex == gr2.ColumnIndex && gr1.RowIndex == gr2.RowIndex;
+            if (gr1 is null && gr2 is null) return true;
+            return gr1 is not null && gr1.Equals(gr2);
         }
 
         public static bool operator !=(GridPosition gr1, GridPosition gr2)
         {
-            return gr1.ColumnIndex != gr2.ColumnIndex || gr1.RowIndex != gr2.RowIndex;
+            if (gr1 is null && gr2 is null) return false;
+            return gr1 is not null && !gr1.Equals(gr2);
         }
 
         public static float Distance(GridPosition gr1, GridPosition gr2)
         {
             var d = gr1 - gr2;
             return (float) Math.Sqrt(d.ColumnIndex * d.ColumnIndex + d.RowIndex * d.RowIndex);
+        }
+        
+        public static int SquareDistance(GridPosition gr1, GridPosition gr2)
+        {
+            var d = gr1 - gr2;
+            return d.ColumnIndex * d.ColumnIndex + d.RowIndex * d.RowIndex;
         }
 
         public override String ToString()

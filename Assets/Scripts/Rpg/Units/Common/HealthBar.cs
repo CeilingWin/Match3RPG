@@ -10,6 +10,13 @@ namespace Rpg.Units.Common
 
         [SerializeField] private Gradient gradient;
 
+        private void Start()
+        {
+            var pos = transform.position;
+            pos.y = 1.6f;
+            transform.position = pos;
+        }
+
         private void LateUpdate()
         {
             transform.LookAt(transform.position + Camera.main.transform.forward);
