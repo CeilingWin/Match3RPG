@@ -6,6 +6,7 @@ using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
+using Rpg.Units.Common;
 using Unity.VisualScripting;
 using Utils;
 
@@ -56,8 +57,10 @@ namespace Rpg.Units.Monsters
             var path = pathFinding.FindPath(GetGridPosition());
             if (path != null)
             {
+                var targetMarker = TargetMarker.CreateObject(target.GetGridPosition());
                 var numMoveAvailable = GetComponent<Stat>().GetSpeed();
                 await GetComponent<Move>().MoveUsingPath(path, numMoveAvailable);
+                targetMarker.Hide();
                 if (numMoveAvailable >= path.Count)
                 {
                     await GetComponent<SingleTargetAttack>().Attack(target);

@@ -34,7 +34,7 @@ namespace Rpg
             await UniTask.CompletedTask;
         }
 
-        public async UniTask SpawnMachine(GridPosition gridPosition, Enum.Material material,
+        public async UniTask SpawnMachine(GridPosition triggerPosition, Enum.Material material, List<GridPosition> gridPositions,
             CancellationToken cancellationToken)
         {
             string machineName;
@@ -46,23 +46,35 @@ namespace Rpg
                 case Enum.Material.Energy:
                     machineName = "EnergyBomb";
                     break;
-                default:
+                case Enum.Material.Machinery:
                     machineName = "Brawler";
+                    break;
+                default:
+                    machineName = "Wall";
                     break;
             }
 
-            var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
-            var machine = machineObject.GetComponent<Machine>();
-            machine.SetGridPosition(gridPosition);
-            listMachines.Add(machine);
+            List<GridPosition> listPositionToGenMachine;
+            if (material == Enum.Material.Biology)
+            {
+                listPositionToGenMachine = gridPositions;
+            }
+            else listPositionToGenMachine = new List<GridPosition>() {triggerPosition};
+
+            foreach (var gridPosition in listPositionToGenMachine)
+            {
+                if  (!CanSpawnMachine(gridPosition, material)) continue;
+                var machineObject = Object.Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + machineName));
+                var machine = machineObject.GetComponent<Machine>();
+                machine.SetGridPosition(gridPosition);
+                listMachines.Add(machine);
+            }
             Debug.Log("spawned new unit");
-            // await UniTask.NextFrame(cancellationToken);
-            // unit.GetComponent<Attack>().DoAttack();
         }
 
         public bool CanSpawnMachine(GridPosition gridPosition, Enum.Material material)
         {
-            return material != Enum.Material.Biology && CanPutUnit(gridPosition);
+            return CanPutUnit(gridPosition);
         }
 
         public bool CanPutUnit(GridPosition gridPosition)

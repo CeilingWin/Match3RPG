@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Enum;
 using Unit;
 
@@ -7,13 +8,14 @@ namespace Match3.Solver
     public class SolveData
     {
         public HashSet<ISlot> SolvedSlot { get; }
-        public Dictionary<GridPosition, HashSet<ISlot>> sequences;
-        public Dictionary<GridPosition, Material> materials;
+        private readonly Dictionary<GridPosition, HashSet<ISlot>> sequences;
+        private readonly Dictionary<GridPosition, HashSet<GridPosition>> sequencesPosition;
+        private readonly Dictionary<GridPosition, Material> materials;
         public SolveData()
         {
-            // todo:
             SolvedSlot = new HashSet<ISlot>();
             sequences = new Dictionary<GridPosition, HashSet<ISlot>>();
+            sequencesPosition = new Dictionary<GridPosition, HashSet<GridPosition>>();
             materials = new Dictionary<GridPosition, Material>();
         }
 
@@ -23,9 +25,11 @@ namespace Match3.Solver
             {
                 sequences.Add(gridPosition, new HashSet<ISlot>());
                 materials.Add(gridPosition, slot.GetItem().GetMaterial());
+                sequencesPosition.Add(gridPosition, new HashSet<GridPosition>());
             }
 
             sequences[gridPosition].Add(slot);
+            sequencesPosition[gridPosition].Add(Game.instance.Match3Module.GameBoard.GetSlotPosition(slot));
             SolvedSlot.Add(slot);
         }
 
@@ -45,6 +49,11 @@ namespace Match3.Solver
         public List<GridPosition> GetAllTriggerGridPos()
         {
             return new List<GridPosition>(sequences.Keys);
+        }
+
+        public List<GridPosition> GetSequencePosition(GridPosition triggerPosition)
+        {
+            return sequencesPosition[triggerPosition]?.ToList();
         }
 
         public Material GetSequenceMaterial(GridPosition gridPosition)

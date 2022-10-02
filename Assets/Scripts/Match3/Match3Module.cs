@@ -151,16 +151,16 @@ namespace Match3
 
         private async UniTask HandleSpawnMachines(SolveData solveData, CancellationToken cancellationToken)
         {
-            var gridPositions = solveData.GetAllTriggerGridPos();
+            var triggerGridPositions = solveData.GetAllTriggerGridPos();
             var listTask = new List<UniTask>();
             var rpgModule = Game.instance.RpgModule;
-            foreach (var gridPosition in gridPositions)
+            foreach (var triggerPosition in triggerGridPositions)
             {
-                var material = solveData.GetSequenceMaterial(gridPosition);
-                if (CanPutUnit(gridPosition))
+                var material = solveData.GetSequenceMaterial(triggerPosition);
+                var allGridPos = solveData.GetSequencePosition(triggerPosition);
+                if (CanPutUnit(triggerPosition))
                 {
-                    if (!rpgModule.CanSpawnMachine(gridPosition, material)) continue;
-                    listTask.Add(Game.instance.RpgModule.SpawnMachine(gridPosition, material, cancellationToken));
+                    listTask.Add(Game.instance.RpgModule.SpawnMachine(triggerPosition, material, allGridPos, cancellationToken));
                 }
             }
 
