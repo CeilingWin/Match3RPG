@@ -32,7 +32,7 @@ namespace Utils
             T result = default(T);
             float bestPriority = float.MinValue;
             int removeIndex = -1;
-            for (var i = queue.Capacity - 1; i >= 0; i--)
+            for (var i = queue.Count - 1; i >= 0; i--)
             {
                 var element = queue[i];
                 if (element.priority > bestPriority)

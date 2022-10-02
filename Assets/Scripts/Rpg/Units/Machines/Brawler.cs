@@ -1,8 +1,9 @@
-﻿using Enum;
+﻿using Match3;
 using Rpg.Ability;
 using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
+using Material = Enum.Material;
 
 namespace Rpg.Units.Machines
 {

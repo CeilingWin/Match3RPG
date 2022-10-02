@@ -33,9 +33,9 @@ namespace Rpg.Units.Machines
         public override async UniTask Die()
         {
             await base.Die();
-            await base.Attack();
             if (GetComponent<Stat>().GetCountDown() == 0)
             {
+                await base.Attack();
                 await Game.instance.Match3Module.RespawnItem(GetGridPosition(), Material.Energy, CancellationToken.None);
             }
         }

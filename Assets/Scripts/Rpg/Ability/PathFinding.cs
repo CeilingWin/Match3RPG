@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using Utils;
 
-namespace Rpg.Ability.PathFinding
+namespace Rpg.Ability
 {
     public class Node
     {
@@ -24,6 +23,21 @@ namespace Rpg.Ability.PathFinding
         private Func<GridPosition, bool> isTarget;
         private Func<GridPosition, GridPosition, int> getCost = GridPosition.SquareDistance;
         private Func<GridPosition, bool> canMoveTo;
+
+        public void SetCheckTargetFunc(Func<GridPosition, bool> func)
+        {
+            isTarget = func;
+        }
+
+        public void SetGetCostFunc(Func<GridPosition, GridPosition, int> func)
+        {
+            getCost = func;
+        }
+
+        public void SetCheckCanMoveFunc(Func<GridPosition, bool> func)
+        {
+            canMoveTo = func;
+        }
 
         private static readonly List<GridPosition> directions = new List<GridPosition>()
         {

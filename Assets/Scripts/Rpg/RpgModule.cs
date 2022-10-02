@@ -6,6 +6,7 @@ using Rpg.Ability;
 using Rpg.Units;
 using UnityEngine;
 using Enum;
+using Utils;
 using Material = UnityEngine.Material;
 
 namespace Rpg
@@ -151,7 +152,9 @@ namespace Rpg
         {
             Debug.Log("LetMonstersAttack");
             List<UniTask> jobs = new List<UniTask>();
+            listMonsters.Sort(new MonsterMoveOrder());
             var monsters = listMonsters.ToArray();
+            
             foreach (var monster in monsters)
             {
                 await monster.Attack();
