@@ -27,8 +27,7 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
             var stat = GetComponent<Stat>();
             if (currentPosition.RowIndex == 0)
             {
-                await GetComponent<BaseAttack>().DoAttack();
-                Game.instance.RpgModule.GetYourBase().TakeDamage(stat.GetDamage());
+                await GetComponent<Monster>().AttackPlayerBase();
             }
             else
             {
@@ -55,8 +54,7 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
 
                     if (numMoveRemain > 0 && GetComponent<Monster>().GetGridPosition().RowIndex == 0)
                     {
-                        await GetComponent<BaseAttack>().DoAttack();
-                        Game.instance.RpgModule.GetYourBase().TakeDamage(stat.GetDamage());
+                        await GetComponent<Monster>().AttackPlayerBase();
                     }
                 }
             }

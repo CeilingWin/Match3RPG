@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Match3;
@@ -34,6 +35,17 @@ namespace Rpg.Ability
             var rotateBackJob = DoActionRotateTo(desPosition - position, GetComponent<Units.Unit>().defaultDirection);
             await rotateBackJob;
             GetComponent<Units.Unit>()?.SetGridPosition(gridPosition);
+        }
+
+        public async UniTask MoveUsingPath(List<GridPosition> path, int numMoveAvailable)
+        {
+            if (path == null) return;
+            foreach (var nextPosition in path)
+            {
+                if (numMoveAvailable == 0) return;
+                await MoveTo(nextPosition);
+                numMoveAvailable--;
+            }
         }
 
         private UniTask DoActionRotateTo(Vector3 currentDirection, Vector3 direction)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Enum;
 using Match3;
 using Rpg.Ability;
+using Rpg.Units;
 
 namespace Utils
 {
@@ -66,12 +67,43 @@ namespace Utils
             var dy = GridPosition.Distance(y.GetGridPosition(), monsterPosition);
             var xPos = x.GetGridPosition();
             var yPos = y.GetGridPosition();
-            if (xPos == yPos)
+            if (Math.Abs(dx - dy) < 0.01)
             {
-                return xPos.RowIndex - yPos.RowIndex;
+                return x.GetComponent<Stat>().GetHp() - y.GetComponent<Stat>().GetHp();
             }
             if (dx < dy) return -1;
             return 1;
+        }
+    }
+
+    public class HunterMachineOrder : IComparer<Machine>
+    {
+        private int GetOrderByMaterial(Material material)
+        {
+            switch (material)
+            {
+                case Material.Biology:
+                    return 0;
+                case Material.Energy:
+                    return 1;
+                case Material.Chemistry:
+                    return 2;
+                case Material.Machinery:
+                    return 3;
+            }
+
+            return 0;
+        }
+
+        public int Compare(Machine x, Machine y)
+        {
+            var xOrder = GetOrderByMaterial(x.GetMaterial());
+            var yOrder = GetOrderByMaterial(y.GetMaterial());
+            if (xOrder == yOrder)
+            {
+                return x.GetComponent<Stat>().GetHp() - y.GetComponent<Stat>().GetHp();
+            }
+            return yOrder - xOrder;
         }
     }
 }

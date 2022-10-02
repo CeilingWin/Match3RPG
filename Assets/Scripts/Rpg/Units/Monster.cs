@@ -94,5 +94,12 @@ namespace Rpg.Units
             var machineOrder = new MachineOrder(GetGridPosition());
             units.Sort(machineOrder);
         }
+
+        public async UniTask AttackPlayerBase()
+        {
+            await GetComponent<BaseAttack>().DoAttack();
+            var damage = GetComponent<Stat>().GetDamage();
+            Game.instance.RpgModule.GetYourBase().TakeDamage(damage);
+        }
     }
 }

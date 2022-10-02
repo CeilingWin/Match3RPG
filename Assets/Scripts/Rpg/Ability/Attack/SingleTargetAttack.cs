@@ -14,12 +14,17 @@ namespace Rpg.Ability.Attack
             var thisUnit = GetComponent<Units.Unit>();
             thisUnit.SortUnits(units);
             var target = units[0];
+            await Attack(target);
+            transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);
+        }
+
+        public async UniTask Attack<T>(T target) where T : Units.Unit
+        {
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var taskAttack = DoAttack();
-            await UniTask.Delay(TimeSpan.FromSeconds(thisUnit.delayAttack));
+            await UniTask.Delay(TimeSpan.FromSeconds(GetComponent<Units.Unit>().delayAttack));
             PerformAttackToTarget(target);
             await taskAttack;
-            transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);
         }
     }
 }

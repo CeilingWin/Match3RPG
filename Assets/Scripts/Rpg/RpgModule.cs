@@ -2,7 +2,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Match3;
-using Rpg.Ability;
 using Rpg.Units;
 using UnityEngine;
 using Enum;
@@ -296,6 +295,11 @@ namespace Rpg
                 }
             }
             return UniTask.CompletedTask;
+        }
+
+        public List<Machine> GetAllMachines()
+        {
+            return listMachines;
         }
     }
 }
