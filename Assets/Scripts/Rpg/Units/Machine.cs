@@ -41,7 +41,8 @@ namespace Rpg.Units
 
         public bool CanMove()
         {
-            return GetComponent<Stat>().GetSpeed() > 0;
+            // return GetComponent<Stat>().GetSpeed() > 0;
+            return false;
         }
 
         public bool CanMoveTo(GridPosition gridPosition)

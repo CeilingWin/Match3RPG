@@ -99,7 +99,9 @@ namespace Match3
                 Debug.Log("dont have item to swap");
                 return;
             }
-            await DoAnimateSwap(slot1, slot2, cancellationToken);
+            var swapItemTask = DoAnimateSwap(slot1, slot2, cancellationToken);
+            var swapMachineTask = Game.instance.RpgModule.SwapMachines(startPos, endPos, cancellationToken);
+            await UniTask.WhenAll(swapItemTask, swapMachineTask);
             var list = new List<GridPosition>() {endPos, startPos};
             await SolveBoard(list, true,cancellationToken);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Match3;
 using Rpg.Units;
 using UnityEngine;
@@ -312,6 +313,27 @@ namespace Rpg
         public List<Machine> GetAllMachines()
         {
             return listMachines;
+        }
+
+        public async UniTask SwapMachines(GridPosition startPos, GridPosition endPos, CancellationToken cancellationToken)
+        {
+            var machine1 = GetMachine(startPos);
+            var machine2 = GetMachine(endPos);
+            var desPos1 = Game.instance.Match3Module.IndexToWorldPosition(endPos);
+            var desPos2 = Game.instance.Match3Module.IndexToWorldPosition(startPos);
+            List<UniTask> jobs = new List<UniTask>();
+            if (machine1)
+            {
+                machine1.SetGridPosition(endPos);
+                jobs.Add(machine1.transform.DOMove(desPos1, 0.4f).WithCancellation(cancellationToken));
+            }
+
+            if (machine2)
+            {
+                machine2.SetGridPosition(startPos);
+                jobs.Add(machine2.transform.DOMove(desPos2, 0.4f).WithCancellation(cancellationToken));
+            }
+            await UniTask.WhenAll(jobs);
         }
     }
 }
