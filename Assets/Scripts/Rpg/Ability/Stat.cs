@@ -19,7 +19,7 @@ namespace Rpg.Ability
             this.numTurnToAttack = numTurnToAttack;
             this.damage = damage;
             this.countDown = countDown;
-            GetComponentInChildren<HealthBar>().SetMaxHealth(hp);
+            GetComponentInChildren<HealthBar>()?.SetMaxHealth(hp);
             GetComponentInChildren<HealthBarMachine>()?.SetCountDown(countDown);
         }
 
