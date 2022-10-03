@@ -874,8 +874,9 @@ GameObject:
   m_Component:
   - component: {fileID: 463670}
   - component: {fileID: 9541910}
+  - component: {fileID: 4008119142982058997}
   m_Layer: 0
-  m_Name: Noname
+  m_Name: Octopus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -909,7 +910,7 @@ Animator:
   m_GameObject: {fileID: 135744}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 3fa06637f7751b44b8e63a9964b181a6, type: 3}
-  m_Controller: {fileID: 9100000, guid: d44a18fbb4c18cb40b8732baf53d96fd, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8b3470680f93c9d4089f7f7260948aae, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -919,6 +920,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4008119142982058997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87d515442aa40559488041d7c27b8b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultDirection: {x: 0, y: 0, z: 0}
+  delayAttack: 0
 --- !u!1 &136398
 GameObject:
   m_ObjectHideFlags: 0
@@ -2984,12 +2999,12 @@ PrefabInstance:
     - target: {fileID: 470891051188747681, guid: e90ceed35bc625145812b964526ba531,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 470891051188747681, guid: e90ceed35bc625145812b964526ba531,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 6.51
+      value: 7.54
       objectReference: {fileID: 0}
     - target: {fileID: 470891051188747681, guid: e90ceed35bc625145812b964526ba531,
         type: 3}
@@ -3015,6 +3030,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HpBarUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 470891051188747687, guid: e90ceed35bc625145812b964526ba531,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 470891051498328856, guid: e90ceed35bc625145812b964526ba531,
         type: 3}

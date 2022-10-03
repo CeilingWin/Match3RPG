@@ -22,16 +22,16 @@ namespace Rpg.Ability
             animator = GetComponent<Animator>();
         }
 
-        public async UniTask MoveTo(GridPosition gridPosition)
+        public async UniTask MoveTo(GridPosition gridPosition, bool changeAnimation = true)
         {
             var desPosition = Game.instance.Match3Module.IndexToWorldPosition(gridPosition);
             var position = transform.position;
             var timeMove = Vector3.Distance(desPosition, position) / MoveSpeed;
-            animator.Play(walkAction);
+            if (changeAnimation) animator.Play(walkAction);
             var rotationJob = DoActionRotateTo(transform.forward, desPosition - position);
             var moveJob = transform.DOMove(desPosition, timeMove).SetEase(Ease.Linear).WithCancellation(this.GetCancellationTokenOnDestroy());
             await UniTask.WhenAll(moveJob, rotationJob);
-            animator.Play(idleAction);
+            if (changeAnimation) animator.Play(idleAction);
             var rotateBackJob = DoActionRotateTo(desPosition - position, GetComponent<Units.Unit>().defaultDirection);
             await rotateBackJob;
             GetComponent<Units.Unit>()?.SetGridPosition(gridPosition);
@@ -40,12 +40,14 @@ namespace Rpg.Ability
         public async UniTask MoveUsingPath(List<GridPosition> path, int numMoveAvailable)
         {
             if (path == null) return;
+            animator.Play(walkAction);
             foreach (var nextPosition in path)
             {
-                if (numMoveAvailable == 0) return;
-                await MoveTo(nextPosition);
+                if (numMoveAvailable == 0) break;
+                await MoveTo(nextPosition, false);
                 numMoveAvailable--;
             }
+            animator.Play(idleAction);
         }
 
         private UniTask DoActionRotateTo(Vector3 currentDirection, Vector3 direction)
