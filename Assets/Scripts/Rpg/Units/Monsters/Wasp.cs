@@ -40,8 +40,8 @@ namespace Rpg.Units.Monsters
             }
 
             // move to attack machine
-            var target = listMachines[0];
             listMachines.Sort(new HunterMachineOrder(GetGridPosition()));
+            var target = listMachines[0];
             var pathFinding = GetComponent<PathFinding>();
             pathFinding.SetCheckTargetFunc(position =>
             {

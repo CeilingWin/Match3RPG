@@ -97,7 +97,8 @@ namespace Rpg.Units
 
         public async UniTask AttackPlayerBase()
         {
-            await GetComponent<BaseAttack>().DoAttack();
+            var baseAttack = GetComponent<BaseAttack>();
+            if (baseAttack != null) await baseAttack.DoAttack();
             var damage = GetComponent<Stat>().GetDamage();
             Game.instance.RpgModule.GetYourBase().TakeDamage(damage);
         }
