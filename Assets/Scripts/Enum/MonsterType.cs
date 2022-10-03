@@ -4,6 +4,7 @@
     {
         Bulldog = 0,
         Shark = 1,
-        Wasp = 2
+        Wasp = 2,
+        Octopus = 3
     }
 }
