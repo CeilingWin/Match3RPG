@@ -277,7 +277,7 @@ namespace Rpg
                 List<MonsterType> listMonsterType = new List<MonsterType>();
                 for (var j = 0; j < numMonster; j++)
                 {
-                    listMonsterType.Add((MonsterType) Random.Range(0, 3));
+                    listMonsterType.Add((MonsterType) Random.Range(0, 4));
                 }
 
                 listMonsterToGenerate.Add(new KeyValuePair<int, List<MonsterType>>(turn, listMonsterType));
