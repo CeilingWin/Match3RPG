@@ -78,6 +78,12 @@ namespace Utils
 
     public class HunterMachineOrder : IComparer<Machine>
     {
+        private readonly GridPosition monsterPosition;
+
+        public HunterMachineOrder(GridPosition currentPosition)
+        {
+            monsterPosition = currentPosition;
+        }
         private int GetOrderByMaterial(Material material)
         {
             switch (material)
@@ -97,13 +103,20 @@ namespace Utils
 
         public int Compare(Machine x, Machine y)
         {
-            var xOrder = GetOrderByMaterial(x.GetMaterial());
-            var yOrder = GetOrderByMaterial(y.GetMaterial());
-            if (xOrder == yOrder)
+            var dx = GridPosition.Distance(x.GetGridPosition(), monsterPosition);
+            var dy = GridPosition.Distance(y.GetGridPosition(), monsterPosition);
+            if (Math.Abs(dx - dy) < 0.01)
             {
-                return x.GetComponent<Stat>().GetHp() - y.GetComponent<Stat>().GetHp();
+                var xOrder = GetOrderByMaterial(x.GetMaterial());
+                var yOrder = GetOrderByMaterial(y.GetMaterial());
+                if (xOrder == yOrder)
+                {
+                    return x.GetComponent<Stat>().GetHp() - y.GetComponent<Stat>().GetHp();
+                }
+                return yOrder - xOrder;
             }
-            return yOrder - xOrder;
+            if (dx < dy) return -1;
+            return 1;
         }
     }
 }
