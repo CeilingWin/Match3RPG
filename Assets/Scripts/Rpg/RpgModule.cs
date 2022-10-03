@@ -126,8 +126,11 @@ namespace Rpg
                 case MonsterType.Shark:
                     monsterName = "Shark";
                     break;
-                default:
+                case MonsterType.Wasp:
                     monsterName = "Wasp";
+                    break;
+                default:
+                    monsterName = "Octopus";
                     break;
             }
 

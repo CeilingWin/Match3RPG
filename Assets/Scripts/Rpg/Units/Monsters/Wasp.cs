@@ -40,8 +40,8 @@ namespace Rpg.Units.Monsters
             }
 
             // move to attack machine
+            listMachines.Sort(new HunterMachineOrder(GetGridPosition()));
             var target = listMachines[0];
-            listMachines.Sort(new HunterMachineOrder());
             var pathFinding = GetComponent<PathFinding>();
             pathFinding.SetCheckTargetFunc(position =>
             {
@@ -54,6 +54,7 @@ namespace Rpg.Units.Monsters
                 };
                 return listAttackPos.Find(pos => Game.instance.RpgModule.GetMachine(pos) == target) != null;
             });
+            pathFinding.SetEstimatesCostFunc(position => GridPosition.Distance(position, target.GetGridPosition()));
             var path = pathFinding.FindPath(GetGridPosition());
             if (path != null)
             {
@@ -83,6 +84,7 @@ namespace Rpg.Units.Monsters
 
             var pathFinding = GetComponent<PathFinding>();
             pathFinding.SetCheckTargetFunc(position => position.RowIndex == 0);
+            pathFinding.SetEstimatesCostFunc(position => Math.Abs(position.RowIndex));
             var path = pathFinding.FindPath(GetGridPosition());
             var numMoveRemain = GetComponent<Stat>().GetSpeed();
             await GetComponent<Move>().MoveUsingPath(path, numMoveRemain);

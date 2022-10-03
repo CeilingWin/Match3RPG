@@ -14,6 +14,7 @@
         public void SetTarget(Units.Unit unit)
         {
             target = unit;
+            isActive = true;
         }
 
         public void SetCountDownToRemove(int countDown)

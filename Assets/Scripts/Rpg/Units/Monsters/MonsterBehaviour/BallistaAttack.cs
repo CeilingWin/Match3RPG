@@ -19,6 +19,7 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
                 return !isHaveMonster && canPutUnit;
             });
             pathFinding.SetCheckTargetFunc(position => position.RowIndex == 0);
+            pathFinding.SetEstimatesCostFunc(position => Math.Abs(position.RowIndex));
         }
 
         public async UniTask Attack()
@@ -39,6 +40,7 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
                     var path = GetComponent<PathFinding>().FindPath(currentPosition);
                     if (path == null) return;
                     var numMoveRemain = stat.GetSpeed();
+                    GetComponent<Animator>().Play("Walk");
                     foreach (var nextPosition in path)
                     {
                         if (numMoveRemain == 0) break;
@@ -48,10 +50,12 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
                             await Attack(machine);
                             break;
                         }
+
                         numMoveRemain--;
-                        await GetComponent<Move>().MoveTo(nextPosition);
+                        await GetComponent<Move>().MoveTo(nextPosition, false);
                     }
 
+                    GetComponent<Animator>().Play("Idle");
                     if (numMoveRemain > 0 && GetComponent<Monster>().GetGridPosition().RowIndex == 0)
                     {
                         await GetComponent<Monster>().AttackPlayerBase();
