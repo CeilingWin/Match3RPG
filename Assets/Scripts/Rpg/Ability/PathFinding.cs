@@ -11,11 +11,6 @@ namespace Rpg.Ability
         public GridPosition pos;
         public int cost;
         public GridPosition prevPos = null;
-
-        public float GetPriority()
-        {
-            return 1f / cost;
-        }
     }
 
     public class PathFinding : MonoBehaviour
@@ -23,6 +18,7 @@ namespace Rpg.Ability
         private Func<GridPosition, bool> isTarget;
         private Func<GridPosition, GridPosition, int> getCost = GridPosition.SquareDistance;
         private Func<GridPosition, bool> canMoveTo;
+        private Func<GridPosition, float> estimatesCost;
 
         public void SetCheckTargetFunc(Func<GridPosition, bool> func)
         {
@@ -39,6 +35,11 @@ namespace Rpg.Ability
             canMoveTo = func;
         }
 
+        public void SetEstimatesCostFunc(Func<GridPosition, float> func)
+        {
+            estimatesCost = func;
+        }
+
         private static readonly List<GridPosition> directions = new List<GridPosition>()
         {
             GridPosition.Down,
@@ -52,7 +53,7 @@ namespace Rpg.Ability
             PriorityQueue<Node> opens = new PriorityQueue<Node>();
             Dictionary<GridPosition, Node> closes = new Dictionary<GridPosition, Node>();
             var startNode = new Node() {pos = startPosition, cost = 0, prevPos = null};
-            opens.Queue(startNode, startNode.GetPriority());
+            opens.Queue(startNode, GetNodePriority(startNode.pos));
             while (!opens.IsEmpty())
             {
                 var node = opens.Dequeue();
@@ -71,7 +72,7 @@ namespace Rpg.Ability
                         {
                             pos = nextPos, cost = currentCost, prevPos = node.pos
                         };
-                        opens.Queue(newNode, newNode.GetPriority());
+                        opens.Queue(newNode, GetNodePriority(newNode.pos));
                     }
                     else
                     {
@@ -83,6 +84,7 @@ namespace Rpg.Ability
                     }
                 }
             }
+
             return null;
         }
 
@@ -95,7 +97,13 @@ namespace Rpg.Ability
                 path.Insert(0, currentNode.pos);
                 currentNode = closes[currentNode.prevPos];
             }
+
             return path;
+        }
+
+        private float GetNodePriority(GridPosition position)
+        {
+            return 1 / (Math.Abs(estimatesCost(position)) + 1);
         }
     }
 }
