@@ -7,7 +7,7 @@ namespace Popup
 {
     public class PopupGameLose : MonoBehaviour
     {
-        public void Start()
+        public virtual void Start()
         {
             Time.timeScale = 0;
         }
@@ -29,7 +29,7 @@ namespace Popup
             return GameObjectUtils.CreateObject<PopupGameLose>("Prefabs/Popup/PopupLoseGame");
         }
 
-        private void ResumeGame()
+        protected void ResumeGame()
         {
             Time.timeScale = 1;
         }

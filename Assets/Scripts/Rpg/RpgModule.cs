@@ -174,7 +174,6 @@ namespace Rpg
                 await monster.Attack();
                 if (yourBase.IsDied())
                 {
-                    Game.instance.EndGame();
                     return;
                 }
             }

@@ -64,7 +64,12 @@ public class Game : MonoBehaviour
     void Update()
     {
         if (!IsCompletedTask()) return;
-        // todo: check end game first
+        if (RpgModule.GetYourBase().IsDied())
+        {
+            YouLose();
+            gameState.SetPhase(GamePhase.Ended);
+            return;
+        }
         // update game
         switch (gameState.GetCurrentPhase())
         {
@@ -111,7 +116,15 @@ public class Game : MonoBehaviour
         else
         {
             gameState.NextTurn();
-            gameState.SetPhase(GamePhase.GenerateMonster);
+            if (gameState.GetCurrentTurn() > gameState.GetWave())
+            {
+                YouWin();
+                gameState.SetPhase(GamePhase.Ended);
+            }
+            else
+            {
+                gameState.SetPhase(GamePhase.GenerateMonster);
+            }
         }
     }
 
@@ -226,9 +239,14 @@ public class Game : MonoBehaviour
         return numWave;
     }
 
-    public void EndGame()
+    private void YouLose()
     {
         PopupGameLose.Create();
+    }
+
+    private void YouWin()
+    {
+        PopupGameWin.Create();
     }
 
     private void OnDestroy()
