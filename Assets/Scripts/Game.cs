@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InputControl;
 using Match3;
+using Popup;
 using Rpg;
 using Rpg.Ability;
 using Rpg.Units;
@@ -15,8 +16,7 @@ public class Game : MonoBehaviour
     [SerializeField] private GameObject ItemPrefab;
     [SerializeField] public GameObject YourBase;
 
-    [SerializeField]
-    private InputHandler InputHandler;
+    [SerializeField] private InputHandler InputHandler;
 
     [SerializeField] private GameUI GameUI;
 
@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
     public RpgModule RpgModule { get; private set; }
     private AsyncLazy currentTask;
     private CancellationToken cancellationToken;
-    
+
     // game state
     private GameState gameState;
     private int numWave = 14;
@@ -103,7 +103,7 @@ public class Game : MonoBehaviour
     {
         await RpgModule.LetMonstersAttack(cancellationToken);
         await RpgModule.UpdateAllUnits();
-        
+
         if (RpgModule.IsGenAllMonster() && RpgModule.GetNumMonster() == 0)
         {
             gameState.SetPhase(GamePhase.BeginNewWave);
@@ -176,6 +176,7 @@ public class Game : MonoBehaviour
                 {
                     Debug.Log("cancel move machine");
                 }
+
                 RpgModule.HideMoveAbleArea();
                 selectedUnit = null;
             }
@@ -205,7 +206,7 @@ public class Game : MonoBehaviour
 
     private bool CanControlGame()
     {
-        return IsCompletedTask() 
+        return IsCompletedTask()
                && gameState.GetCurrentPhase() == GamePhase.PlayerMove
                && gameState.GetNumberMoveRemain() > 0;
     }
@@ -223,6 +224,11 @@ public class Game : MonoBehaviour
     public int GetNumberWave()
     {
         return numWave;
+    }
+
+    public void EndGame()
+    {
+        PopupGameLose.Create();
     }
 
     private void OnDestroy()

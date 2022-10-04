@@ -172,6 +172,11 @@ namespace Rpg
             foreach (var monster in monsters)
             {
                 await monster.Attack();
+                if (yourBase.IsDied())
+                {
+                    Game.instance.EndGame();
+                    return;
+                }
             }
 
             // update after attack

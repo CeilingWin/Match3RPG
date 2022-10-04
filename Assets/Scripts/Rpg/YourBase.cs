@@ -23,6 +23,11 @@ namespace Rpg
             transform.localPosition = new Vector3((scale - 1) / 2, 0, 0);
         }
 
+        public bool IsDied()
+        {
+            return currentHp <= 0;
+        }
+
         public void TakeDamage(int damage)
         {
             SetHp(this.currentHp - damage);
