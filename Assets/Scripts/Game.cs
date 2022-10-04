@@ -232,4 +232,9 @@ public class Game : MonoBehaviour
         InputHandler.TouchEnded -= OnTouchEnded;
         InputHandler.TouchCanceled -= OnTouchCancel;
     }
+
+    public void Destroy()
+    {
+        ItemPool.GetIns().Clear();
+    }
 }
