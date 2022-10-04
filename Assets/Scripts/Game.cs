@@ -36,6 +36,7 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ItemPool.GetIns().Clear();
         instance = this;
         cancellationToken = this.GetCancellationTokenOnDestroy();
         Match3Module = new Match3Module(0, ItemPrefab);
@@ -116,7 +117,7 @@ public class Game : MonoBehaviour
         else
         {
             gameState.NextTurn();
-            if (gameState.GetCurrentTurn() > gameState.GetWave())
+            if (gameState.GetWave() > GetNumberWave())
             {
                 YouWin();
                 gameState.SetPhase(GamePhase.Ended);
