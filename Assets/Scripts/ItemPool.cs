@@ -39,4 +39,9 @@ public class ItemPool
         item.Transform.gameObject.SetActive(false);
         items.Enqueue(item);
     }
+
+    public void Clear()
+    {
+        items.Clear();
+    }
 }

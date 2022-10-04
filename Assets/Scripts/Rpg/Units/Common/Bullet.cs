@@ -30,6 +30,7 @@ namespace Rpg.Units.Common
             var timeMove = Vector3.Distance(desPosition, transform.position) / moveSpeed;
             await transform.DOMove(desPosition, timeMove).SetEase(Ease.Linear)
                 .WithCancellation(this.GetCancellationTokenOnDestroy());
+            // todo: fix bug call to here while destroyed
             SetGridPosition(gridPosition);
         }
 

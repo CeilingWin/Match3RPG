@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InputControl;
 using Match3;
+using Popup;
 using Rpg;
 using Rpg.Ability;
 using Rpg.Units;
@@ -15,8 +16,7 @@ public class Game : MonoBehaviour
     [SerializeField] private GameObject ItemPrefab;
     [SerializeField] public GameObject YourBase;
 
-    [SerializeField]
-    private InputHandler InputHandler;
+    [SerializeField] private InputHandler InputHandler;
 
     [SerializeField] private GameUI GameUI;
 
@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
     public RpgModule RpgModule { get; private set; }
     private AsyncLazy currentTask;
     private CancellationToken cancellationToken;
-    
+
     // game state
     private GameState gameState;
     private int numWave = 14;
@@ -64,7 +64,12 @@ public class Game : MonoBehaviour
     void Update()
     {
         if (!IsCompletedTask()) return;
-        // todo: check end game first
+        if (RpgModule.GetYourBase().IsDied())
+        {
+            YouLose();
+            gameState.SetPhase(GamePhase.Ended);
+            return;
+        }
         // update game
         switch (gameState.GetCurrentPhase())
         {
@@ -103,7 +108,7 @@ public class Game : MonoBehaviour
     {
         await RpgModule.LetMonstersAttack(cancellationToken);
         await RpgModule.UpdateAllUnits();
-        
+
         if (RpgModule.IsGenAllMonster() && RpgModule.GetNumMonster() == 0)
         {
             gameState.SetPhase(GamePhase.BeginNewWave);
@@ -111,7 +116,15 @@ public class Game : MonoBehaviour
         else
         {
             gameState.NextTurn();
-            gameState.SetPhase(GamePhase.GenerateMonster);
+            if (gameState.GetCurrentTurn() > gameState.GetWave())
+            {
+                YouWin();
+                gameState.SetPhase(GamePhase.Ended);
+            }
+            else
+            {
+                gameState.SetPhase(GamePhase.GenerateMonster);
+            }
         }
     }
 
@@ -176,6 +189,7 @@ public class Game : MonoBehaviour
                 {
                     Debug.Log("cancel move machine");
                 }
+
                 RpgModule.HideMoveAbleArea();
                 selectedUnit = null;
             }
@@ -205,7 +219,7 @@ public class Game : MonoBehaviour
 
     private bool CanControlGame()
     {
-        return IsCompletedTask() 
+        return IsCompletedTask()
                && gameState.GetCurrentPhase() == GamePhase.PlayerMove
                && gameState.GetNumberMoveRemain() > 0;
     }
@@ -225,11 +239,26 @@ public class Game : MonoBehaviour
         return numWave;
     }
 
+    private void YouLose()
+    {
+        PopupGameLose.Create();
+    }
+
+    private void YouWin()
+    {
+        PopupGameWin.Create();
+    }
+
     private void OnDestroy()
     {
         InputHandler.TouchBegan -= OnTouchBegan;
         InputHandler.TouchMoved -= OnTouchMoved;
         InputHandler.TouchEnded -= OnTouchEnded;
         InputHandler.TouchCanceled -= OnTouchCancel;
+    }
+
+    public void Destroy()
+    {
+        ItemPool.GetIns().Clear();
     }
 }

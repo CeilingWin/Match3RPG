@@ -173,6 +173,10 @@ namespace Rpg
             foreach (var monster in monsters)
             {
                 await monster.Attack();
+                if (yourBase.IsDied())
+                {
+                    return;
+                }
             }
 
             // update after attack
