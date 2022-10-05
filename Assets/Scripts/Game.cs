@@ -47,6 +47,7 @@ public class Game : MonoBehaviour
         InputHandler.TouchCanceled += OnTouchCancel;
         gameState = new GameState();
         currentTask = Init(cancellationToken).ToAsyncLazy();
+        GameUI.UpdateStates();
     }
 
     private async UniTask Init(CancellationToken cancellationToken)
@@ -78,6 +79,7 @@ public class Game : MonoBehaviour
                 OnNewWave();
                 break;
             case GamePhase.GenerateMonster:
+                GameUI.UpdateStates();
                 currentTask = RpgModule.GenerateMonster(gameState.GetCurrentTurn(), cancellationToken).ToAsyncLazy();
                 gameState.SetPhase(GamePhase.PlayerMove);
                 break;
@@ -131,6 +133,7 @@ public class Game : MonoBehaviour
         }
         else
         {
+            GameUI.ShowNotification("Wave " + gameState.GetWave());
             RpgModule.InitMonstersOfWave(gameState.GetWave());
             gameState.SetPhase(GamePhase.GenerateMonster);
         }
