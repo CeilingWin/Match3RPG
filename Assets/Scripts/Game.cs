@@ -117,15 +117,7 @@ public class Game : MonoBehaviour
         else
         {
             gameState.NextTurn();
-            if (gameState.GetWave() > GetNumberWave())
-            {
-                YouWin();
-                gameState.SetPhase(GamePhase.Ended);
-            }
-            else
-            {
-                gameState.SetPhase(GamePhase.GenerateMonster);
-            }
+            gameState.SetPhase(GamePhase.GenerateMonster);
         }
     }
 
@@ -134,6 +126,7 @@ public class Game : MonoBehaviour
         gameState.IncreaseWave();
         if (gameState.GetWave() > numWave)
         {
+            YouWin();
             gameState.SetPhase(GamePhase.Ended);
         }
         else
