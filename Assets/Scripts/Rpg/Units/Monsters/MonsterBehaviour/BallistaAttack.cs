@@ -67,7 +67,7 @@ namespace Rpg.Units.Monsters.MonsterBehaviour
         private async UniTask Attack(Machine target)
         {
             var attackJob = GetComponent<BaseAttack>().DoAttack();
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+            await UniTask.Delay(TimeSpan.FromSeconds(GetComponent<Unit>().delayAttack));
             await target.TakeDamage(GetComponent<Stat>().GetDamage());
             await attackJob;
         }
