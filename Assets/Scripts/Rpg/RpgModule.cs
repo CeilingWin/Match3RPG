@@ -26,7 +26,7 @@ namespace Rpg
             listMoveArea = new List<GameObject>();
             listMonsterToGenerate = new List<KeyValuePair<int, List<MonsterType>>>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
-            yourBase.SetMaxHp(100);
+            yourBase.SetMaxHp(12);
         }
 
         public async UniTask Init(CancellationToken cancellationToken)

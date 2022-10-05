@@ -65,7 +65,7 @@ public class Game : MonoBehaviour
     void Update()
     {
         if (!IsCompletedTask()) return;
-        if (RpgModule.GetYourBase().IsDied())
+        if (gameState.GetCurrentPhase() != GamePhase.Ended && RpgModule.GetYourBase().IsDied())
         {
             YouLose();
             gameState.SetPhase(GamePhase.Ended);
