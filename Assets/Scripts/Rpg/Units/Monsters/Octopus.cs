@@ -10,9 +10,9 @@ namespace Rpg.Units.Monsters
     {
         protected override void Start()
         {
-            delayAttack = 1.6f;
+            delayAttack = 1.4f;
             base.Start();
-            GetComponent<Stat>().SetStat(6, 1, 1, 6, Int32.MaxValue);
+            GetComponent<Stat>().SetStat(3, 1, 1, 4, Int32.MaxValue);
             this.AddComponent<SniperAttack>();
         }
 
