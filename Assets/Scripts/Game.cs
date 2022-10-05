@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using InputControl;
+using Level;
 using Match3;
 using Popup;
 using Rpg;
@@ -52,6 +53,7 @@ public class Game : MonoBehaviour
 
     private async UniTask Init(CancellationToken cancellationToken)
     {
+        numWave = LevelConfig.instance.GetGameLevelConfig().GetNumWave();
         await Match3Module.Init(cancellationToken);
         await RpgModule.Init(cancellationToken);
         await StartGame();
@@ -134,7 +136,7 @@ public class Game : MonoBehaviour
         else
         {
             GameUI.ShowNotification("Wave " + gameState.GetWave());
-            RpgModule.InitMonstersOfWave(gameState.GetWave());
+            RpgModule.OnNewWave(gameState.GetWave());
             gameState.SetPhase(GamePhase.GenerateMonster);
         }
     }

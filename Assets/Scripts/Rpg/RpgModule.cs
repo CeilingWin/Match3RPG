@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -6,8 +7,11 @@ using Match3;
 using Rpg.Units;
 using UnityEngine;
 using Enum;
+using Level;
 using Utils;
 using Material = UnityEngine.Material;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Rpg
 {
@@ -18,6 +22,9 @@ namespace Rpg
         private readonly List<KeyValuePair<int, List<MonsterType>>> listMonsterToGenerate;
         private readonly YourBase yourBase;
         private readonly List<GameObject> listMoveArea;
+        private GameLevelModel gameLevelConfig;
+        private WaveConfig waveConfig;
+        private readonly Dictionary<MonsterType, int> listMonsterGenerated;
 
         public RpgModule()
         {
@@ -25,13 +32,14 @@ namespace Rpg
             listMonsters = new List<Monster>();
             listMoveArea = new List<GameObject>();
             listMonsterToGenerate = new List<KeyValuePair<int, List<MonsterType>>>();
+            listMonsterGenerated = new Dictionary<MonsterType, int>();
             yourBase = Game.instance.YourBase.GetComponent<YourBase>();
-            yourBase.SetMaxHp(12);
         }
 
         public async UniTask Init(CancellationToken cancellationToken)
         {
-            // load config
+            gameLevelConfig = LevelConfig.instance.GetGameLevelConfig();
+            yourBase.SetMaxHp(gameLevelConfig.playerHealth);
             await UniTask.CompletedTask;
         }
 
@@ -83,35 +91,56 @@ namespace Rpg
             return GetMachine(gridPosition) == null && GetMonster(gridPosition) == null;
         }
 
+        public void OnNewWave(int currentWave)
+        {
+            listMonsterGenerated.Clear();
+            waveConfig = gameLevelConfig.GetWaveConfig(currentWave);
+        }
+
         public async UniTask GenerateMonster(int turn, CancellationToken cancellationToken)
         {
-            var currentWave = Game.instance.GetState().GetWave();
-            Debug.Log("GenerateMonster wave " + currentWave);
-            var monstersToGen = listMonsterToGenerate.Find(data => data.Key == turn);
-            if (monstersToGen.Value == null) return;
-            var boardSize = Game.instance.Match3Module.GetBoardSize();
             var listJobs = new List<UniTask>();
-            foreach (var monsterType in monstersToGen.Value)
+            foreach (var rule in waveConfig.rules)
             {
-                int minRow = monsterType == MonsterType.Wasp ? boardSize.RowIndex - 4 : boardSize.RowIndex - 1;
-                int numLooped = 0;
-                const int maxLoop = 100;
-                while (numLooped < maxLoop)
+                var listMonsterToGen = rule.GetGenerateMonsters(turn, listMonsters.Count);
+                foreach (var data in listMonsterToGen)
                 {
-                    var gridPosition = new GridPosition(Random.Range(minRow, boardSize.RowIndex),
-                        Random.Range(0, boardSize.ColumnIndex));
-                    if (Game.instance.Match3Module.CanPutUnit(gridPosition) && CanPutUnit(gridPosition))
+                    var monsterType = data.Key;
+                    var quantity = data.Value;
+                    var quantityLimited = CommonUtils.GetValue(waveConfig.totalMonster, monsterType, 0);
+                    var quantityGenerated = CommonUtils.GetValue(listMonsterGenerated, monsterType, 0);
+                    var quantityRemain = quantityLimited - quantityGenerated;
+                    var quantityCanGen = Math.Min(quantity, quantityRemain);
+                    if (quantityCanGen<=0) continue;
+                    for (var i = 0; i < quantity; i++)
                     {
-                        listJobs.Add(SpawnMonster(gridPosition, monsterType));
-                        break;
+                        var position = GetMonsterSpawnPosition(monsterType);
+                        if (position == null) continue;
+                        listJobs.Add(SpawnMonster(position, monsterType));
                     }
-
-                    numLooped++;
+                    listMonsterGenerated[monsterType] = quantityGenerated + quantityCanGen;
                 }
             }
-
-            listMonsterToGenerate.Remove(monstersToGen);
             await UniTask.WhenAll(listJobs);
+        }
+
+        private GridPosition GetMonsterSpawnPosition(MonsterType monsterType)
+        {
+            var boardSize = Game.instance.Match3Module.GetBoardSize();
+            int minRow = monsterType == MonsterType.Wasp ? boardSize.RowIndex - 4 : boardSize.RowIndex - 1;
+            int numLooped = 0;
+            const int maxLoop = 100;
+            while (numLooped < maxLoop)
+            {
+                var gridPosition = new GridPosition(Random.Range(minRow, boardSize.RowIndex),
+                    Random.Range(0, boardSize.ColumnIndex));
+                if (Game.instance.Match3Module.CanPutUnit(gridPosition) && CanPutUnit(gridPosition))
+                {
+                    return gridPosition;
+                }
+                numLooped++;
+            }
+            return null;
         }
 
         private async UniTask SpawnMonster(GridPosition gridPosition, MonsterType type)
@@ -274,11 +303,11 @@ namespace Rpg
         {
             // todo: load wave config
             listMonsterToGenerate.Clear();
-            var numTurnGenMonster = Random.Range(1, 10);
+            var numTurnGenMonster = Random.Range(1, 2);
             for (var turn = 0; turn < numTurnGenMonster; turn++)
             {
                 bool needGen = Random.Range(0, 3) > 0 ? true : false;
-                var numMonster = needGen ? Random.Range(1, 4) : 0;
+                var numMonster = needGen ? Random.Range(1, 1) : 0;
                 List<MonsterType> listMonsterType = new List<MonsterType>();
                 for (var j = 0; j < numMonster; j++)
                 {
@@ -291,7 +320,14 @@ namespace Rpg
 
         public bool IsGenAllMonster()
         {
-            return listMonsterToGenerate.Count == 0;
+            foreach (var config in waveConfig.totalMonster)
+            {
+                var monsterType = config.Key;
+                var quantity = config.Value;
+                var quantityGenerated = CommonUtils.GetValue(listMonsterGenerated, monsterType, 0);
+                if (quantity > quantityGenerated) return false;
+            }
+            return true;
         }
 
         /*

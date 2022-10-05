@@ -19,7 +19,7 @@
         public GameState()
         {
             // todo: init by level
-            currentTurn = 0;
+            currentTurn = 1;
             wave = 0;
             gamePhase = GamePhase.BeginNewWave;
             numberMoveRemain = 0;
@@ -57,7 +57,7 @@
         public void IncreaseWave()
         {
             wave++;
-            currentTurn = 0;
+            currentTurn = 1;
         }
 
         public int GetCurrentTurn()

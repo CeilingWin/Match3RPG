@@ -9,6 +9,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Text TextWave;
     [SerializeField] private Text TextLevel;
     [SerializeField] private Text TextNotification;
+    [SerializeField] private Text TextRound;
     void Start()
     {
         TextLevel.text = "Level " + GameConfig.currentLevel;
@@ -21,6 +22,7 @@ public class GameUI : MonoBehaviour
         var currentWave = state.GetWave();
         var maxWave = Game.instance.GetNumberWave();
         TextWave.text = "Wave: " + currentWave + "/" + maxWave;
+        TextRound.text = "Round: " + state.GetCurrentTurn();
     }
 
     public void BackToLobby()

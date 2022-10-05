@@ -2,6 +2,6 @@
 {
     public static class GameConfig
     {
-        public static int currentLevel;
+        public static int currentLevel = 1;
     }
 }
