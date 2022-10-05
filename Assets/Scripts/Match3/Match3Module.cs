@@ -82,23 +82,29 @@ namespace Match3
             }
         }
 
-        public async UniTask Swap(GridPosition startPos, GridPosition endPos, CancellationToken cancellationToken)
+        public bool CanSwap(GridPosition startPos, GridPosition endPos)
         {
-            if (!gameBoard.IsPointInBoard(startPos) || !gameBoard.IsPointInBoard(endPos)) return;
+            if (!gameBoard.IsPointInBoard(startPos) || !gameBoard.IsPointInBoard(endPos)) return false;
             var slot1 = gameBoard.GetSlot(startPos);
             var slot2 = gameBoard.GetSlot(endPos);
-            Debug.Log("swap" + startPos + " to " + endPos);
             if (!slot1.GetState().CanContainItem() || !slot2.GetState().CanContainItem())
             {
-                Debug.Log("have slot cant contain item");
-                return;
+                return false;
             }
 
             if (slot1.GetItem() == null || slot2.GetItem() == null)
             {
-                Debug.Log("dont have item to swap");
-                return;
+                return false;
             }
+            if (!Game.instance.RpgModule.CanSwapMachines(startPos, endPos)) return false;
+            return true;
+        }
+
+        public async UniTask Swap(GridPosition startPos, GridPosition endPos, CancellationToken cancellationToken)
+        {
+            if (!CanSwap(startPos, endPos)) return;
+            var slot1 = gameBoard.GetSlot(startPos);
+            var slot2 = gameBoard.GetSlot(endPos);
             var swapItemTask = DoAnimateSwap(slot1, slot2, cancellationToken);
             var swapMachineTask = Game.instance.RpgModule.SwapMachines(startPos, endPos, cancellationToken);
             await UniTask.WhenAll(swapItemTask, swapMachineTask);

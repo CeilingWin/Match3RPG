@@ -322,6 +322,12 @@ namespace Rpg
             return listMachines;
         }
 
+        public bool CanSwapMachines(GridPosition startPos, GridPosition endPos)
+        {
+            var monster1 = GetMonster(startPos);
+            var monster2 = GetMonster(endPos);
+            return monster1 == null && monster2 == null;
+        }
         public async UniTask SwapMachines(GridPosition startPos, GridPosition endPos, CancellationToken cancellationToken)
         {
             var machine1 = GetMachine(startPos);

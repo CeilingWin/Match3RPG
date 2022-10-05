@@ -209,6 +209,7 @@ public class Game : MonoBehaviour
         var startGridPos = Match3Module.PositionToGridPosition(startPosition);
         var dir = Match3Module.GetMoveDirection(startPosition, endPosition);
         var endGridPos = startGridPos + dir;
+        if (!Match3Module.CanSwap(startGridPos, endGridPos)) return;
         gameState.DecreaseNumMove();
         await Match3Module.Swap(startGridPos, endGridPos, cancellationToken);
     }
