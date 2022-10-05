@@ -27,7 +27,7 @@ public class Game : MonoBehaviour
 
     // game state
     private GameState gameState;
-    private int numWave = 14;
+    private int numWave = 3;
     private Machine selectedUnit;
 
     // handle input
