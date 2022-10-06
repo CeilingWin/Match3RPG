@@ -13,7 +13,7 @@ namespace Level
 
         private LevelConfig()
         {
-            const int playerHealth = 40;
+            const int playerHealth = 20;
             gameLevels = new List<GameLevelModel>();
             // level 1
             var wave1 = new WaveConfig()
