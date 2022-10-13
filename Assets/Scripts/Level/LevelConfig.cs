@@ -38,6 +38,8 @@ namespace Level
                 .AddMonster(MonsterType.Wasp, 5)
                 .AddRule(new GenIfRoundIsMore(1, 0, MonsterType.Bulldog))
                 .AddRule(new GenIfRoudEquals(1, 2, MonsterType.Shark))
+                .AddRule(new GenIfRoudEquals(1, 4, MonsterType.Shark))
+                .AddRule(new GenIfRoudEquals(1, 6, MonsterType.Shark))
                 .AddRule(new GenIfRoundIsMore(1, 0, MonsterType.Wasp));
             var level2 = new GameLevelModel(playerHealth).AddWave(wave1).AddWave(wave2);
             // level 3
