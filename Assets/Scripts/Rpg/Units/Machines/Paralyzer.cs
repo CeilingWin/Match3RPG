@@ -1,26 +1,31 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Enum;
 using Rpg.Ability;
 using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
 using Rpg.Effects;
 using Unity.VisualScripting;
+using UnityEngine;
+using Material = Enum.Material;
 
 namespace Rpg.Units.Machines
 {
+    
     public class Paralyzer : Machine
     {
+        [SerializeField] public GameObject weapon;
+        [SerializeField] public GameObject amorVfx;
+        [SerializeField] public GameObject explosionVfx;
         private int countDownToAttack;
         protected override void Start()
         {
-            delayAttack = 0.5f;
+            delayAttack = 0.3f;
             base.Start();
             material = Material.Chemistry;
             var detection = this.AddComponent<RangeDetection>();
             detection.SetRange(3);
             GetComponent<Stat>().SetStat(3, 1, 2, 1, 5);
-            this.AddComponent<SingleTargetAttack>().SetEffect(new ChangeSpeedEffect(-2, 2));
+            this.AddComponent<ParalyzerAttack>().SetEffect(new ChangeSpeedEffect(-2, 2));
             countDownToAttack = 1;
         }
 

@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Enum;
 using Rpg.Ability;
 using Rpg.Ability.Attack;
 using Rpg.Ability.Detection;
 using Unity.VisualScripting;
+using UnityEngine;
+using Material = Enum.Material;
 
 namespace Rpg.Units.Machines
 {
     public class EnergyBomb : Machine
     {
+        [SerializeField] private GameObject explosionVfx;
         protected override void Start()
         {
             delayAttack = 0.5f;
@@ -24,8 +26,12 @@ namespace Rpg.Units.Machines
 
         public override async UniTask Attack()
         {
+
             if (GetComponent<Stat>().GetCountDown() == 0)
             {
+                var t = Instantiate(explosionVfx);
+                t.transform.position = this.transform.position;
+                t.transform.localScale = Vector3.one * 0.6f;
                 await GetComponent<IAttack>().Attack<Monster>();
             }
         }
@@ -35,7 +41,7 @@ namespace Rpg.Units.Machines
             await base.Die();
             if (GetComponent<Stat>().GetCountDown() == 0)
             {
-                await base.Attack();
+                await Attack();
                 await Game.instance.Match3Module.RespawnItem(GetGridPosition(), Material.Energy, CancellationToken.None);
             }
         }

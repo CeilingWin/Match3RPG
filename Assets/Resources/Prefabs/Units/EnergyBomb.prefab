@@ -1952,6 +1952,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e277499de24fb1a6ca8b90247d8eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultDirection: {x: 0, y: 0, z: 0}
+  delayAttack: 0.6
+  explosionVfx: {fileID: 1000012903210382, guid: a6a622dcb6224014f923dc6743bf35d3,
+    type: 3}
 --- !u!1 &7613206787460088069
 GameObject:
   m_ObjectHideFlags: 0

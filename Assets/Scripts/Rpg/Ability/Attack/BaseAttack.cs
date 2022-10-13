@@ -21,7 +21,7 @@ namespace Rpg.Ability
             animator = GetComponent<Animator>();
         }
 
-        public async UniTask DoAttack()
+        public virtual async UniTask DoAttack()
         {
             var idleAction = Animator.StringToHash("Idle");
             await AnimatorUtils.PlayAnimationSync(animator, attackAction, idleAction);

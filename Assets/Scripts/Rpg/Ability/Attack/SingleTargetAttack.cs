@@ -18,7 +18,7 @@ namespace Rpg.Ability.Attack
             transform.rotation = Quaternion.LookRotation(thisUnit.defaultDirection);
         }
 
-        public async UniTask Attack<T>(T target) where T : Units.Unit
+        public virtual async UniTask Attack<T>(T target) where T : Units.Unit
         {
             transform.rotation = Quaternion.LookRotation(target.transform.position - transform.position);
             var taskAttack = DoAttack();
